@@ -17,12 +17,11 @@ def decode_video_stream(encoded_path):
 
         QP = struct.unpack("H", f.read(2))[0]
         prev = None
-        frame_idx = 0
 
         while True:
             type_byte = f.read(1)
             if not type_byte:
-                break # Clean EOF
+                break 
 
             frame_type = struct.unpack("B", type_byte)[0]
 
@@ -38,14 +37,12 @@ def decode_video_stream(encoded_path):
                 next_frame = prev.copy()
 
                 for _ in range(num_components):
-                    # --- RESILIENCE LAYER 1: Catch Stream Misalignment ---
                     try:
                         flag = struct.unpack("B", f.read(1))[0]
                         y_min, y_max, x_min, x_max = struct.unpack("HHHH", f.read(8))
                         size = struct.unpack("I", f.read(4))[0]
                         raw_payload = f.read(size)
                     except struct.error:
-                        # If the stream is broken or we hit EOF mid-component, stop processing this frame
                         break
 
                     h_box = y_max - y_min + 1
@@ -55,12 +52,25 @@ def decode_video_stream(encoded_path):
                         if len(raw_payload) == 1:
                             val = struct.unpack("B", raw_payload)[0]
                             next_frame[y_min:y_max+1, x_min:x_max+1] = val
+                            
+                    # ---------- DECODE TYPE 4: TEMPORAL MOTION ----------
+                    elif flag == 4:
+                        if len(raw_payload) == 4:
+                            dy, dx = struct.unpack("hh", raw_payload)
+                            src_y = y_min - dy
+                            src_x = x_min - dx
+                            
+                            # Safety clamp
+                            src_y = max(0, min(i420_h - h_box, src_y))
+                            src_x = max(0, min(w - w_box, src_x))
+                            
+                            # Cut and paste the entity from the previous frame!
+                            next_frame[y_min:y_max+1, x_min:x_max+1] = prev[src_y:src_y+h_box, src_x:src_x+w_box]
+                            
                     else:
-                        # --- RESILIENCE LAYER 2: Catch Zstd Corruption ---
                         try:
                             data = dctx.decompress(raw_payload)
                         except zstd.ZstdError:
-                            # Drop the corrupted block and continue processing the rest of the frame
                             continue 
 
                         if flag == 1:
@@ -77,8 +87,6 @@ def decode_video_stream(encoded_path):
             elif frame_type == 2:
                 pass
 
-            # --- YIELD BGR FRAME ---
             yield_frame = np.clip(prev, 0, 255).astype(np.uint8).reshape((i420_h, w))
             bgr_frame = cv2.cvtColor(yield_frame, cv2.COLOR_YUV2BGR_I420)
             yield bgr_frame
-            frame_idx += 1
