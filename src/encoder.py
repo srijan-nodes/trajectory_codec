@@ -4,42 +4,47 @@ import struct
 import zstandard as zstd
 from tqdm import tqdm
 
-def encode_video(video_path, output_path, iframe_interval=60, QP=8, BIAS_BLOB_THRESHOLD=12.0):
+def encode_video(video_path, output_path, iframe_interval=300, QP=8, BIAS_BLOB_THRESHOLD=12.0):
     cap = cv2.VideoCapture(video_path)
 
     ret, frame = cap.read()
     if not ret:
         raise RuntimeError("Could not read video")
 
-    h, w, c = frame.shape
-    cctx = zstd.ZstdCompressor(level=3)
+    h, w, _ = frame.shape
+    # I420 format requires dimensions to be perfectly divisible by 2
+    h = h - (h % 2)
+    w = w - (w % 2)
     
+    cctx = zstd.ZstdCompressor(level=3)
     total_frames = int(cap.get(cv2.CAP_PROP_FRAME_COUNT))
 
     with open(output_path, "wb") as f:
-        # HEADER
-        f.write(b'NAM0')
-        f.write(struct.pack("III", h, w, c))
+        # HEADER (Upgraded to NAM1 for YUV 4:2:0)
+        f.write(b'NAM1')
+        f.write(struct.pack("III", h, w, 1)) # Channels is now effectively 1
         f.write(struct.pack("H", QP))
 
-        prev = frame.astype(np.int16)
-        frame_idx = 0
+        # Convert first frame to I420 Flat Array
+        curr_i420 = cv2.cvtColor(frame[:h, :w], cv2.COLOR_BGR2YUV_I420)
+        prev = curr_i420.reshape((int(h * 1.5), w, 1)).astype(np.int16)
         
-        pbar = tqdm(total=total_frames, desc="Encoding NAM0", unit="frame")
+        frame_idx = 0
+        pbar = tqdm(total=total_frames, desc="Encoding NAM1 (I420)", unit="frame")
 
         while True:
-            if frame_idx == 0:
-                curr = frame
-            else:
-                ret, curr = cap.read()
+            if frame_idx > 0:
+                ret, frame = cap.read()
                 if not ret:
                     break
-
-            curr_i = curr.astype(np.int16)
+                    
+            # Convert incoming frame to flat I420
+            curr_i420 = cv2.cvtColor(frame[:h, :w], cv2.COLOR_BGR2YUV_I420)
+            curr_i = curr_i420.reshape((int(h * 1.5), w, 1)).astype(np.int16)
 
             # ---------- I-FRAME ----------
             if frame_idx == 0 or frame_idx % iframe_interval == 0:
-                raw = curr.tobytes()
+                raw = curr_i420.tobytes()
                 compressed = cctx.compress(raw)
 
                 f.write(struct.pack("B", 0))
@@ -60,25 +65,27 @@ def encode_video(video_path, output_path, iframe_interval=60, QP=8, BIAS_BLOB_TH
                 kernel = np.ones((3, 3), np.uint8)
                 mask = cv2.dilate(mask, kernel, iterations=1)
 
-                # ---------- CONNECTED COMPONENTS ----------
-                num_labels, labels = cv2.connectedComponents(mask)
+                # ---> THE C++ SPEED HACK <---
+                num_labels, labels, stats, centroids = cv2.connectedComponentsWithStats(mask)
 
                 components = []
                 next_prev = prev.copy()  # Prevents Encoder-Decoder Drift
 
                 for label in range(1, num_labels):
-                    ys, xs = np.where(labels == label)
-                    if len(ys) == 0:
+                    x_min = stats[label, cv2.CC_STAT_LEFT]
+                    y_min = stats[label, cv2.CC_STAT_TOP]
+                    w_box = stats[label, cv2.CC_STAT_WIDTH]
+                    h_box = stats[label, cv2.CC_STAT_HEIGHT]
+                    area  = stats[label, cv2.CC_STAT_AREA]
+
+                    # Instant noise filter using pre-calculated area
+                    if area < 25:
                         continue
 
-                    y_min, y_max = ys.min(), ys.max()
-                    x_min, x_max = xs.min(), xs.max()
+                    y_max = y_min + h_box - 1
+                    x_max = x_min + w_box - 1
 
-                    # noise filter
-                    if (y_max - y_min) * (x_max - x_min) < 25:
-                        continue
-
-                    cropped_curr = curr[y_min:y_max+1, x_min:x_max+1]
+                    cropped_curr = curr_i[y_min:y_max+1, x_min:x_max+1]
                     cropped_quant = quantized[y_min:y_max+1, x_min:x_max+1]
 
                     # ---------- DECISION ENGINE ----------
@@ -86,11 +93,11 @@ def encode_video(video_path, output_path, iframe_interval=60, QP=8, BIAS_BLOB_TH
                     max_variance = np.max(variance)
 
                     if max_variance < BIAS_BLOB_THRESHOLD:
-                        # Path A: Solid Color Blob
+                        # Path A: Solid Color Blob (Now 1 byte)
                         flag = 3
-                        mean_color = np.mean(cropped_curr, axis=(0, 1)).astype(np.uint8)
-                        compressed = mean_color.tobytes()
-                        next_prev[y_min:y_max+1, x_min:x_max+1] = mean_color.astype(np.int16)
+                        mean_val = int(np.mean(cropped_curr))
+                        compressed = struct.pack("B", mean_val) 
+                        next_prev[y_min:y_max+1, x_min:x_max+1] = mean_val
                     else:
                         # Path B: Complex Texture
                         if cropped_quant.min() >= -128 and cropped_quant.max() <= 127:
