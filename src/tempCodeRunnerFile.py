@@ -2,9 +2,9 @@ import cv2
 import numpy as np
 import struct
 import zstandard as zstd
-from tqdm import tqdm
 
-def encode_video(video_path, output_path, iframe_interval=60, QP=8, BIAS_BLOB_THRESHOLD=12.0):
+
+def encode_video(video_path, output_path, iframe_interval=60, QP=2):
     cap = cv2.VideoCapture(video_path)
 
     ret, frame = cap.read()
@@ -13,8 +13,6 @@ def encode_video(video_path, output_path, iframe_interval=60, QP=8, BIAS_BLOB_TH
 
     h, w, c = frame.shape
     cctx = zstd.ZstdCompressor(level=3)
-    
-    total_frames = int(cap.get(cv2.CAP_PROP_FRAME_COUNT))
 
     with open(output_path, "wb") as f:
         # HEADER
@@ -24,8 +22,6 @@ def encode_video(video_path, output_path, iframe_interval=60, QP=8, BIAS_BLOB_TH
 
         prev = frame.astype(np.int16)
         frame_idx = 0
-        
-        pbar = tqdm(total=total_frames, desc="Encoding NAM0", unit="frame")
 
         while True:
             if frame_idx == 0:
@@ -64,7 +60,6 @@ def encode_video(video_path, output_path, iframe_interval=60, QP=8, BIAS_BLOB_TH
                 num_labels, labels = cv2.connectedComponents(mask)
 
                 components = []
-                next_prev = prev.copy()  # Prevents Encoder-Decoder Drift
 
                 for label in range(1, num_labels):
                     ys, xs = np.where(labels == label)
@@ -78,36 +73,21 @@ def encode_video(video_path, output_path, iframe_interval=60, QP=8, BIAS_BLOB_TH
                     if (y_max - y_min) * (x_max - x_min) < 25:
                         continue
 
-                    cropped_curr = curr[y_min:y_max+1, x_min:x_max+1]
-                    cropped_quant = quantized[y_min:y_max+1, x_min:x_max+1]
+                    cropped = quantized[y_min:y_max+1, x_min:x_max+1]
 
-                    # ---------- DECISION ENGINE ----------
-                    variance = np.var(cropped_curr, axis=(0, 1))
-                    max_variance = np.max(variance)
-
-                    if max_variance < BIAS_BLOB_THRESHOLD:
-                        # Path A: Solid Color Blob
-                        flag = 3
-                        mean_color = np.mean(cropped_curr, axis=(0, 1)).astype(np.uint8)
-                        compressed = mean_color.tobytes()
-                        next_prev[y_min:y_max+1, x_min:x_max+1] = mean_color.astype(np.int16)
+                    # ---------- UINT8 PACK ----------
+                    if cropped.min() >= -128 and cropped.max() <= 127:
+                        packed = (cropped + 128).astype(np.uint8)
+                        flag = 1
+                        payload = packed.tobytes()
                     else:
-                        # Path B: Complex Texture
-                        if cropped_quant.min() >= -128 and cropped_quant.max() <= 127:
-                            packed = (cropped_quant + 128).astype(np.uint8)
-                            flag = 1
-                            payload = packed.tobytes()
-                        else:
-                            flag = 2
-                            payload = cropped_quant.astype(np.int16).tobytes()
+                        flag = 2
+                        payload = cropped.astype(np.int16).tobytes()
 
-                        compressed = cctx.compress(payload)
-                        recon_delta = cropped_quant * QP
-                        next_prev[y_min:y_max+1, x_min:x_max+1] += recon_delta
+                    compressed = cctx.compress(payload)
 
                     components.append((flag, y_min, y_max, x_min, x_max, compressed))
 
-                # ---------- BINARY STREAM WRITE ----------
                 if len(components) == 0:
                     f.write(struct.pack("B", 2))  # empty frame
                 else:
@@ -120,10 +100,9 @@ def encode_video(video_path, output_path, iframe_interval=60, QP=8, BIAS_BLOB_TH
                         f.write(struct.pack("I", len(compressed)))
                         f.write(compressed)
 
-                prev = next_prev
+                prev = curr_i
 
             frame_idx += 1
-            pbar.update(1)
-            
-        pbar.close()
+
     cap.release()
+    print(f"Encoding complete ({frame_idx} frames)")
