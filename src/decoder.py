@@ -17,6 +17,9 @@ def decode_video_stream(encoded_path):
 
         QP = struct.unpack("H", f.read(2))[0]
         prev = None
+        
+        # --- INITIALIZE SYNCED LONG-TERM MEMORY ---
+        entity_cache = []
 
         while True:
             type_byte = f.read(1)
@@ -48,24 +51,27 @@ def decode_video_stream(encoded_path):
                     h_box = y_max - y_min + 1
                     w_box = x_max - x_min + 1
 
-                    if flag == 3:
+                    # ---------- DECODE TYPE 5: ENTITY CACHE ----------
+                    if flag == 5:
+                        if len(raw_payload) == 1:
+                            idx = struct.unpack("B", raw_payload)[0]
+                            recon_block = entity_cache[idx].copy()
+                            next_frame[y_min:y_max+1, x_min:x_max+1] = recon_block
+
+                    elif flag == 3:
                         if len(raw_payload) == 1:
                             val = struct.unpack("B", raw_payload)[0]
-                            next_frame[y_min:y_max+1, x_min:x_max+1] = val
+                            recon_block = np.full((h_box, w_box, 1), val, dtype=np.int16)
+                            next_frame[y_min:y_max+1, x_min:x_max+1] = recon_block
                             
-                    # ---------- DECODE TYPE 4: TEMPORAL MOTION ----------
                     elif flag == 4:
                         if len(raw_payload) == 4:
                             dy, dx = struct.unpack("hh", raw_payload)
-                            src_y = y_min - dy
-                            src_x = x_min - dx
+                            src_y = max(0, min(i420_h - h_box, y_min - dy))
+                            src_x = max(0, min(w - w_box, x_min - dx))
                             
-                            # Safety clamp
-                            src_y = max(0, min(i420_h - h_box, src_y))
-                            src_x = max(0, min(w - w_box, src_x))
-                            
-                            # Cut and paste the entity from the previous frame!
-                            next_frame[y_min:y_max+1, x_min:x_max+1] = prev[src_y:src_y+h_box, src_x:src_x+w_box]
+                            recon_block = prev[src_y:src_y+h_box, src_x:src_x+w_box].copy()
+                            next_frame[y_min:y_max+1, x_min:x_max+1] = recon_block
                             
                     else:
                         try:
@@ -81,6 +87,12 @@ def decode_video_stream(encoded_path):
 
                         delta = quantized * QP
                         next_frame[y_min:y_max+1, x_min:x_max+1] += delta
+                        recon_block = next_frame[y_min:y_max+1, x_min:x_max+1].copy()
+
+                    # --- SYNCHRONIZE MEMORY BANK ---
+                    entity_cache.append(recon_block)
+                    if len(entity_cache) > 255:
+                        entity_cache.pop(0)
 
                 prev = next_frame
 
