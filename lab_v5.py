@@ -57,7 +57,6 @@ def run_encoder(video_path, output_path, config, QP=27, LAMBDA=0.012):
                 is_scene_change = True
 
             if prev is None or is_scene_change:
-                # Zstd Flush Bug Fixed: Only write the raw compressed bytes for keyframes
                 compressed = cctx.compress(curr_y.astype(np.uint8).tobytes())
                 f.write(struct.pack("<B", 0))
                 f.write(struct.pack("<I", len(compressed)))
@@ -109,16 +108,18 @@ def run_encoder(video_path, output_path, config, QP=27, LAMBDA=0.012):
                     best_mode = 2
                     best_payload = curr_block.astype(np.uint8).tobytes()
                     best_recon = curr_block.copy()
-                    best_cost = 999999
+                    best_cost = 257 + (LAMBDA * base_sad) 
                     log_dy, log_dx = 0, 0
                     
                     curr_block_i32 = curr_y_i32[y_min:y_max, x_min:x_max]
 
-                    # 2. FAST LANE: BACKGROUND
+                    # 2. FAST LANE: BACKGROUND (WITH HARD MSE GATE)
                     if config.get('background'):
                         bg_cand = bg_model[y_min:y_max, x_min:x_max].astype(np.int32)
                         bg_sad = np.sum(np.abs(curr_block_i32 - bg_cand))
-                        if bg_sad / 256 < 6.0:
+                        bg_mse = np.mean((curr_block_i32 - bg_cand) ** 2)
+                        
+                        if bg_sad / 256 < 6.0 and bg_mse < 60.0:
                             cost = 1 + (LAMBDA * bg_sad)
                             if cost < best_cost:
                                 best_mode, best_cost, best_payload = 6, cost, b''
@@ -154,14 +155,16 @@ def run_encoder(video_path, output_path, config, QP=27, LAMBDA=0.012):
                                 best_payload = struct.pack("<B", len(unique_vals)) + palette.tobytes() + packed.tobytes()
                                 best_recon = curr_block.copy()
 
-                    # 5. FAST LANE: FAST MOTION
+                    # 5. FAST LANE: PREDICTED & FAST MOTION (WITH HARD MSE GATES)
                     if config.get('motion') and base_sad > 256 and best_cost > 15:
                         pred_y = np.clip(y_min - last_dy, 0, h - BLOCK_SIZE)
                         pred_x = np.clip(x_min - last_dx, 0, w - BLOCK_SIZE)
                         cand_pred = prev_i32[pred_y:pred_y+BLOCK_SIZE, pred_x:pred_x+BLOCK_SIZE]
-                        pred_sad = np.sum(np.abs(curr_block_i32 - cand_pred))
                         
-                        if pred_sad / 256 < 4.0:
+                        pred_sad = np.sum(np.abs(curr_block_i32 - cand_pred))
+                        pred_mse = np.mean((curr_block_i32 - cand_pred) ** 2)
+                        
+                        if pred_sad / 256 < 4.0 and pred_mse < 60.0:
                             cost = 1 + (LAMBDA * pred_sad)
                             if cost < best_cost:
                                 best_mode, best_cost, best_payload = 11, cost, b''
@@ -171,20 +174,93 @@ def run_encoder(video_path, output_path, config, QP=27, LAMBDA=0.012):
                             s_y_min, s_y_max = max(0, pred_y - 16), min(h, pred_y + BLOCK_SIZE + 16)
                             s_x_min, s_x_max = max(0, pred_x - 16), min(w, pred_x + BLOCK_SIZE + 16)
                             if (s_y_max - s_y_min >= BLOCK_SIZE) and (s_x_max - s_x_min >= BLOCK_SIZE):
-                                res = cv2.matchTemplate(prev[s_y_min:s_y_max, s_x_min:s_x_max].astype(np.float32), curr_block.astype(np.float32), cv2.TM_SQDIFF_NORMED)
+                                res = cv2.matchTemplate(prev[s_y_min:s_y_max, s_x_min:s_x_max].astype(np.uint8), curr_block.astype(np.uint8), cv2.TM_SQDIFF)
                                 min_val, _, min_loc, _ = cv2.minMaxLoc(res)
                                 best_match_y = s_y_min + min_loc[1]
                                 best_match_x = s_x_min + min_loc[0]
                                 candidate = prev_i32[best_match_y:best_match_y+BLOCK_SIZE, best_match_x:best_match_x+BLOCK_SIZE]
+                                
                                 cost = 3 + (LAMBDA * np.sum(np.abs(curr_block_i32 - candidate)))
+                                cand_mse = np.mean((curr_block_i32 - candidate) ** 2)
+                                
                                 log_dy = int(y_min - best_match_y)
                                 log_dx = int(x_min - best_match_x)
-                                if cost < best_cost:
+                                
+                                if cost < best_cost and cand_mse < 150.0:
                                     best_mode, best_cost = 4, cost
                                     best_payload = struct.pack("<hh", log_dy, log_dx)
                                     best_recon = prev[best_match_y:best_match_y+BLOCK_SIZE, best_match_x:best_match_x+BLOCK_SIZE].copy()
 
-                    # 6. FAST LANE: SPATIAL DELTA
+                    # ------------------------------------------------------------------
+                    # 🚨 THE DESPERATION ARENA 🚨
+                    # ------------------------------------------------------------------
+                    if best_cost > 30: 
+                        
+                        # A. Faded Motion (With Hard Gate) - Mode 13
+                        ref_y = np.clip(y_min - log_dy, 0, h - BLOCK_SIZE)
+                        ref_x = np.clip(x_min - log_dx, 0, w - BLOCK_SIZE)
+                        fade_cand = prev_i32[ref_y:ref_y+BLOCK_SIZE, ref_x:ref_x+BLOCK_SIZE]
+                        
+                        luma_shift = int(np.mean(curr_block_i32) - np.mean(fade_cand))
+                        if -128 <= luma_shift <= 127:
+                            shifted_cand = np.clip(fade_cand + luma_shift, 0, 255)
+                            fade_sad = np.sum(np.abs(curr_block_i32 - shifted_cand))
+                            cost = 4 + (LAMBDA * fade_sad)
+                            
+                            fade_mse = np.mean((curr_block_i32 - shifted_cand.astype(np.int32)) ** 2)
+                            
+                            if cost < best_cost and fade_mse < 200.0:
+                                best_mode, best_cost = 13, cost
+                                best_payload = struct.pack("<hhb", log_dy, log_dx, luma_shift)
+                                best_recon = shifted_cand.astype(np.int16)
+                                
+                        # B. DCT COMPRESSION (Mode 9 & 10)
+                        if config.get('dct') and best_cost > 45:
+                            curr_f32 = curr_block.astype(np.float32)
+                            dct = cv2.dct(curr_f32)
+                            
+                            dct_low = np.zeros_like(dct)
+                            dct_low[:4, :4] = dct[:4, :4]
+                            recon_low = cv2.idct(dct_low).astype(np.int32)
+                            
+                            cost_9 = 33 + (LAMBDA * 0.6 * np.sum(np.abs(curr_block_i32 - recon_low)))
+                            if cost_9 < best_cost:
+                                best_mode, best_cost = 9, cost_9
+                                best_payload = dct_low[:4, :4].flatten().astype(np.float16).tobytes()
+                                best_recon = recon_low.astype(np.int16).reshape((16, 16, 1))
+
+                            if best_cost > 100:
+                                dct_mid = np.zeros_like(dct)
+                                dct_mid[:8, :8] = dct[:8, :8]
+                                recon_mid = cv2.idct(dct_mid).astype(np.int32)
+                                
+                                cost_10 = 129 + (LAMBDA * 0.8 * np.sum(np.abs(curr_block_i32 - recon_mid)))
+                                if cost_10 < best_cost:
+                                    best_mode, best_cost = 10, cost_10
+                                    best_payload = dct_mid[:8, :8].flatten().astype(np.float16).tobytes()
+                                    best_recon = recon_mid.astype(np.int16).reshape((16, 16, 1))
+
+                        # C. Fast Forced Dither (Uniform Binning) - Mode 15
+                        if best_cost > 75:
+                            b_min, b_max = np.min(curr_block), np.max(curr_block)
+                            centers = np.linspace(b_min, b_max, 4).astype(np.uint8)
+                            labels = np.abs(curr_block_i32.reshape(-1, 1) - centers).argmin(axis=1).astype(np.uint8)
+                            
+                            flat = labels.flatten()
+                            shift = np.array([6, 4, 2, 0], dtype=np.uint8)
+                            packed = np.bitwise_or.reduce(flat.reshape(-1, 4) << shift, axis=1).astype(np.uint8)
+                            
+                            recon_dither = centers[labels].reshape((16, 16, 1)).astype(np.int16)
+                            dither_sad = np.sum(np.abs(curr_block_i32 - recon_dither.astype(np.int32)))
+                            cost = 69 + (LAMBDA * dither_sad)
+                            if cost < best_cost:
+                                best_mode, best_cost = 15, cost
+                                best_payload = centers.tobytes() + packed.tobytes()
+                                best_recon = recon_dither
+
+                    # ------------------------------------------------------------------
+                    # 🧱 THE ABSOLUTE FALLBACK
+                    # ------------------------------------------------------------------
                     if best_cost > 10:
                         delta = np.round((curr_block.astype(np.float32) - prev_block.astype(np.float32)) / QP).astype(np.int16)
                         if delta.min() >= -128 and delta.max() <= 127:
@@ -197,62 +273,6 @@ def run_encoder(video_path, output_path, config, QP=27, LAMBDA=0.012):
                                 cost = (1 + nnz*2) + (LAMBDA * np.sum(np.abs(curr_block_i32 - recon.astype(np.int32))))
                                 if cost < best_cost:
                                     best_mode, best_cost, best_payload, best_recon = 1, cost, payload, recon
-
-                    # ------------------------------------------------------------------
-                    # 🚨 THE DESPERATION ARENA (High Entropy Particle Handlers) 🚨
-                    # ------------------------------------------------------------------
-                    if best_cost > 40: 
-                        
-                        # A. Faded Motion (Illumination Offset) - Mode 13
-                        ref_y = np.clip(y_min - log_dy, 0, h - BLOCK_SIZE)
-                        ref_x = np.clip(x_min - log_dx, 0, w - BLOCK_SIZE)
-                        fade_cand = prev_i32[ref_y:ref_y+BLOCK_SIZE, ref_x:ref_x+BLOCK_SIZE]
-                        
-                        luma_shift = int(np.mean(curr_block_i32) - np.mean(fade_cand))
-                        if -128 <= luma_shift <= 127:
-                            shifted_cand = np.clip(fade_cand + luma_shift, 0, 255)
-                            fade_sad = np.sum(np.abs(curr_block_i32 - shifted_cand))
-                            cost = 4 + (LAMBDA * fade_sad)
-                            if cost < best_cost:
-                                best_mode, best_cost = 13, cost
-                                best_payload = struct.pack("<hhb", log_dy, log_dx, luma_shift)
-                                best_recon = shifted_cand.astype(np.int16)
-                                
-                        # B. Low-Freq DCT (Confetti Killer) - Mode 9
-                        if config.get('dct') and best_cost > 60:
-                            curr_f32 = curr_block.astype(np.float32)
-                            dct = cv2.dct(curr_f32)
-                            
-                            dct_low = np.zeros_like(dct)
-                            dct_low[:4, :4] = dct[:4, :4]
-                            recon_low = cv2.idct(dct_low)
-                            
-                            recon_low_i32 = recon_low.astype(np.int32)
-                            cost = 33 + (LAMBDA * np.sum(np.abs(curr_block_i32 - recon_low_i32)))
-                            if cost < best_cost:
-                                best_mode, best_cost = 9, cost
-                                flat_coeffs = dct_low[:4, :4].flatten().astype(np.float16)
-                                best_payload = flat_coeffs.tobytes()
-                                best_recon = recon_low.astype(np.int16).reshape((16, 16, 1))
-
-                        # C. Forced Dither (K-Means to 4 Colors) - Mode 15
-                        if best_cost > 75:
-                            Z = curr_block.astype(np.float32).reshape((-1, 1))
-                            criteria = (cv2.TERM_CRITERIA_EPS + cv2.TERM_CRITERIA_MAX_ITER, 10, 1.0)
-                            _, labels, centers = cv2.kmeans(Z, 4, None, criteria, 3, cv2.KMEANS_PP_CENTERS)
-                            centers = np.uint8(centers).flatten()
-                            
-                            flat = labels.flatten().astype(np.uint8)
-                            shift = np.array([6, 4, 2, 0], dtype=np.uint8)
-                            packed = np.bitwise_or.reduce(flat.reshape(-1, 4) << shift, axis=1).astype(np.uint8)
-                            
-                            recon_dither = centers[labels.flatten()].reshape((16, 16, 1)).astype(np.int16)
-                            dither_sad = np.sum(np.abs(curr_block_i32 - recon_dither.astype(np.int32)))
-                            cost = 69 + (LAMBDA * dither_sad)
-                            if cost < best_cost:
-                                best_mode, best_cost = 15, cost
-                                best_payload = centers.tobytes() + packed.tobytes()
-                                best_recon = recon_dither
 
                     # Vector Logging
                     if best_mode in [4, 11, 13]:
@@ -310,7 +330,7 @@ def run_encoder(video_path, output_path, config, QP=27, LAMBDA=0.012):
                     elif best_mode in [4, 11]: telemetry["blocks_motion"] += blocks_in_box
                     elif best_mode == 6: telemetry["blocks_background"] += blocks_in_box
                     elif best_mode == 7: telemetry["blocks_solid"] += blocks_in_box
-                    elif best_mode == 9: telemetry["blocks_dct"] += blocks_in_box
+                    elif best_mode == 9 or best_mode == 10: telemetry["blocks_dct"] += blocks_in_box
                     elif best_mode == 12: telemetry["blocks_palette"] += blocks_in_box
                     elif best_mode == 13: telemetry["blocks_faded_mot"] += blocks_in_box
                     elif best_mode == 15: telemetry["blocks_dithered"] += blocks_in_box
@@ -320,14 +340,14 @@ def run_encoder(video_path, output_path, config, QP=27, LAMBDA=0.012):
                 payload_buffer.extend(struct.pack("<H", int(skip_run)))
                 
             if config.get('background'):
-                diff_mask = np.abs(curr_y_i32 - next_prev.astype(np.int32)) < 5
+                # FIX: Force encoder to update BG model exactly like the decoder
+                diff_mask = np.abs(next_prev.astype(np.int32) - prev.astype(np.int32)) < 5
                 bg_model[diff_mask] = (0.95 * bg_model[diff_mask] + 0.05 * next_prev[diff_mask]).astype(np.float32)
 
             prev = next_prev.copy()
             frame_idx += 1
             pbar.update(1)
 
-            # Flush mode buffer per P-Frame group
             comp_modes = cctx.compress(bytes(mode_buffer))
             comp_payloads = cctx.compress(bytes(payload_buffer))
             f.write(struct.pack("<II", len(comp_modes), len(comp_payloads)))
@@ -439,6 +459,13 @@ def decode_and_profile(original_video, encoded_path):
                             dct_low[:4, :4] = flat_coeffs.reshape((4, 4)).astype(np.float32)
                             recon_low = cv2.idct(dct_low)
                             next_frame[y_min:y_max, x_min:x_max] = recon_low.astype(np.int16).reshape((16, 16, 1))
+                        elif current_mode == 10:
+                            flat_coeffs = np.frombuffer(payload_data[pay_idx : pay_idx + 128], dtype=np.float16)
+                            pay_idx += 128
+                            dct_mid = np.zeros((16, 16), dtype=np.float32)
+                            dct_mid[:8, :8] = flat_coeffs.reshape((8, 8)).astype(np.float32)
+                            recon_mid = cv2.idct(dct_mid)
+                            next_frame[y_min:y_max, x_min:x_max] = recon_mid.astype(np.int16).reshape((16, 16, 1))
                         elif current_mode == 15: 
                             palette = np.frombuffer(payload_data[pay_idx : pay_idx + 4], dtype=np.uint8); pay_idx += 4
                             packed = np.frombuffer(payload_data[pay_idx : pay_idx + 64], dtype=np.uint8); pay_idx += 64
