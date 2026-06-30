@@ -1,13 +1,1 @@
 Video,Config,Size_KB,Ratio,MSE,Enc_FPS,Dec_FPS
-01_ideal_motion.mp4,V8 Hybrid,18.24,0.224,907.90,13.7,149.7
-02_ideal_cache.mp4,V8 Hybrid,8.30,0.113,203.44,30.6,155.7
-03_ideal_palette.mp4,V8 Hybrid,7.98,0.110,0.09,39.4,157.7
-04_ideal_baseline.mp4,V8 Hybrid,7.72,0.029,1348.65,8.8,167.9
-05_break_entropy.mp4,V8 Hybrid,283.72,0.038,4759.95,243.3,909.4
-06_break_jitter.mp4,V8 Hybrid,140.11,1.438,700.01,7.6,122.3
-07_break_fade.mp4,V8 Hybrid,26.41,0.361,1676.10,6.8,105.8
-08_break_moire.mp4,V8 Hybrid,1.04,0.001,886.23,103.0,298.5
-09_scaling_ui.mp4,V8 Hybrid,15.85,0.154,1037.99,6.1,172.3
-2frames.mp4,V8 Hybrid,36.49,1.308,41.46,5.5,32.4
-2frames_cd.mp4,V8 Hybrid,103.48,1.518,0.86,3.7,28.8
-ball.mp4,V8 Hybrid,175.43,1.720,1971.70,0.6,24.1
