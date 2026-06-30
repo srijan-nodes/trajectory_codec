@@ -1,13 +1,13 @@
 Video,Config,Size_KB,Ratio,MSE,Enc_FPS,Dec_FPS
-01_ideal_motion.mp4,V8 Hybrid,20.57,0.253,902.43,12.6,159.4
-02_ideal_cache.mp4,V8 Hybrid,8.30,0.113,203.44,29.8,174.6
-03_ideal_palette.mp4,V8 Hybrid,7.98,0.110,0.09,41.3,162.5
-04_ideal_baseline.mp4,V8 Hybrid,7.72,0.029,1348.65,9.3,175.7
-05_break_entropy.mp4,V8 Hybrid,283.72,0.038,4759.95,243.7,871.9
-06_break_jitter.mp4,V8 Hybrid,15.80,0.162,702.61,7.3,130.9
-07_break_fade.mp4,V8 Hybrid,36.26,0.495,1500.39,8.7,155.9
-08_break_moire.mp4,V8 Hybrid,1.04,0.001,886.23,136.7,304.9
-09_scaling_ui.mp4,V8 Hybrid,17.56,0.171,1040.65,4.4,146.2
-2frames.mp4,V8 Hybrid,38.09,1.365,41.46,5.2,28.9
-2frames_cd.mp4,V8 Hybrid,103.48,1.518,0.86,3.3,26.8
-ball.mp4,V8 Hybrid,222.10,2.178,2189.74,0.6,24.2
+01_ideal_motion.mp4,V8 Hybrid,18.24,0.224,907.90,15.7,174.0
+02_ideal_cache.mp4,V8 Hybrid,8.30,0.113,203.44,34.8,189.9
+03_ideal_palette.mp4,V8 Hybrid,7.98,0.110,0.09,45.3,189.4
+04_ideal_baseline.mp4,V8 Hybrid,7.72,0.029,1348.65,10.6,185.6
+05_break_entropy.mp4,V8 Hybrid,283.72,0.038,4759.95,272.0,994.5
+06_break_jitter.mp4,V8 Hybrid,15.77,0.162,700.01,9.3,167.7
+07_break_fade.mp4,V8 Hybrid,26.41,0.361,1676.10,10.8,180.2
+08_break_moire.mp4,V8 Hybrid,1.04,0.001,886.23,147.7,430.1
+09_scaling_ui.mp4,V8 Hybrid,15.85,0.154,1037.99,7.9,188.6
+2frames.mp4,V8 Hybrid,36.49,1.308,41.46,5.9,38.6
+2frames_cd.mp4,V8 Hybrid,103.48,1.518,0.86,4.1,32.9
+ball.mp4,V8 Hybrid,139.87,1.371,1971.70,0.6,25.8
