@@ -1,14 +1,14 @@
 Video,Config,Size_KB,Ratio,MSE,Enc_FPS,Dec_FPS
-01_ideal_motion.mp4,V6 Dynamic Boxing,2.93,0.036,0.22,81.9,149.1
-02_ideal_cache.mp4,V6 Dynamic Boxing,3.87,0.053,0.53,83.1,138.0
-03_ideal_palette.mp4,V6 Dynamic Boxing,1.00,0.014,0.23,84.0,150.1
-04_ideal_baseline.mp4,V6 Dynamic Boxing,0.34,0.001,1.96,82.8,178.7
-05_break_entropy.mp4,V6 Dynamic Boxing,25266.97,3.401,0.00,240.6,358.6
-06_break_jitter.mp4,V6 Dynamic Boxing,3.37,0.035,11.02,75.0,125.7
-07_break_fade.mp4,V6 Dynamic Boxing,4.68,0.064,5.31,62.4,131.4
-08_break_moire.mp4,V6 Dynamic Boxing,0.26,0.000,1.01,90.2,143.2
-09_scaling_ui.mp4,V6 Dynamic Boxing,3.44,0.033,4.26,60.5,134.5
-2frames.mp4,V6 Dynamic Boxing,36.38,1.304,0.94,15.3,24.1
-2frames_cd.mp4,V6 Dynamic Boxing,103.39,1.517,0.43,16.2,21.9
-ball.mp4,V6 Dynamic Boxing,63.17,0.619,28.73,13.0,26.7
-countdown.mp4,V6 Dynamic Boxing,644.54,0.424,19.80,5.7,24.2
+01_ideal_motion.mp4,V6 Dynamic Boxing,2.95,0.036,0.22,71.0,82.5
+02_ideal_cache.mp4,V6 Dynamic Boxing,3.83,0.052,0.45,66.6,121.2
+03_ideal_palette.mp4,V6 Dynamic Boxing,1.00,0.014,0.23,62.8,166.6
+04_ideal_baseline.mp4,V6 Dynamic Boxing,0.34,0.001,1.96,79.7,190.5
+05_break_entropy.mp4,V6 Dynamic Boxing,25266.97,3.401,0.00,229.6,316.7
+06_break_jitter.mp4,V6 Dynamic Boxing,3.82,0.039,5.04,62.6,134.2
+07_break_fade.mp4,V6 Dynamic Boxing,4.54,0.062,3.96,77.2,164.2
+08_break_moire.mp4,V6 Dynamic Boxing,0.26,0.000,1.01,86.8,158.9
+09_scaling_ui.mp4,V6 Dynamic Boxing,3.68,0.036,4.74,63.7,134.6
+2frames.mp4,V6 Dynamic Boxing,36.67,1.315,0.88,22.4,23.4
+2frames_cd.mp4,V6 Dynamic Boxing,103.46,1.518,0.43,12.7,20.4
+ball.mp4,V6 Dynamic Boxing,72.12,0.707,4.52,11.2,18.5
+countdown.mp4,V6 Dynamic Boxing,1368.01,0.900,6.55,5.5,12.9
