@@ -5,6 +5,8 @@ import cv2
 import numpy as np
 import subprocess
 import io
+import pandas as pd
+import generate_excel
 from lab_v5 import run_encoder, decode_and_profile
 class GitBenchmarkTracker:
     @staticmethod
@@ -93,8 +95,8 @@ class GitBenchmarkTracker:
                 with open(summary_csv, 'w', encoding='utf-8') as f: f.write(new_csv_content)
                 with open(mse_csv, 'w', encoding='utf-8') as f: f.write(new_mse_content)
                 
-                # Commit
-                subprocess.run(['git', 'add', summary_csv, mse_csv], check=True)
+                generate_excel.create_excel_report(summary_csv, mse_csv, 'compression_report.xlsx')
+                subprocess.run(['git', 'add', summary_csv, mse_csv, 'compression_report.xlsx'], check=True)
                 subprocess.run(['git', 'commit', '-m', 'Auto-commit: Benchmark results updated'], capture_output=True, check=True)
                 
                 # Jump back to Dev branch
@@ -109,7 +111,8 @@ class GitBenchmarkTracker:
                 
                 print(f"✅ Successfully committed to 'reports' branch and returned safely to '{curr_branch}'.")
             else:
-                subprocess.run(['git', 'add', summary_csv, mse_csv], check=True)
+                generate_excel.create_excel_report(summary_csv, mse_csv, 'compression_report.xlsx')
+                subprocess.run(['git', 'add', summary_csv, mse_csv, 'compression_report.xlsx'], check=True)
                 subprocess.run(['git', 'commit', '-m', 'Auto-commit: Benchmark results updated'], capture_output=True, check=True)
                 print("✅ Successfully committed to current 'reports' branch.")
 
@@ -125,6 +128,8 @@ def run_batch_ablation(media_folder="test_vid", summary_csv="rdo_report_v5.csv",
     test_configs = [
         {"name": "V6 Dynamic Boxing", "motion": True, "palette": True, "dynamic_boxing": True, "background": True, "dct": True},
     ]
+
+    results_data = []
 
     # Open both CSVs for writing
     with open(summary_csv, mode='w', newline='', encoding='utf-8') as sum_file, \
@@ -148,9 +153,9 @@ def run_batch_ablation(media_folder="test_vid", summary_csv="rdo_report_v5.csv",
             cap.release()
 
             print(f"\n▶ Testing: {video} (Orig: {orig_size_kb:.2f} KB | Frames: {total_frames}/{total_frames})")
-            print("=" * 145)
-            print(f"{'Algorithm':<22} | {'Size (KB)':>9} | {'Ratio':>6} | {'MSE':>5} | {'Enc FPS':>7} | {'Dec FPS':>7} | Modes Used (%)")
-            print("-" * 145)
+            print("=" * 175)
+            print(f"{'Algorithm':<22} | {'Size (KB)':>9} | {'Ratio':>6} | {'AvgMSE':>6} | {'MaxMSE':>6} | {'BlkMSE':>6} | {'Enc FPS':>7} | {'Dec FPS':>7} | Modes Used (%)")
+            print("-" * 175)
             
             for config in test_configs:
                 out_file = f"temp_v5.nam"
@@ -164,8 +169,18 @@ def run_batch_ablation(media_folder="test_vid", summary_csv="rdo_report_v5.csv",
                     
                     size_kb = os.path.getsize(out_file) / 1024
                     ratio = size_kb / orig_size_kb
-                    mean_mse = np.mean(frame_mses)
                     
+                    mean_mse = np.mean(frame_mses) if len(frame_mses) > 0 else 0.0
+                    max_mse = np.max(frame_mses) if len(frame_mses) > 0 else 0.0
+                    
+                    # Max Block MSE (5 consecutive frames = roughly 0.16s to 0.2s)
+                    block_size = 5
+                    if len(frame_mses) >= block_size:
+                        block_mses = [np.mean(frame_mses[i:i+block_size]) for i in range(len(frame_mses) - block_size + 1)]
+                        max_block_mse = np.max(block_mses)
+                    else:
+                        max_block_mse = mean_mse
+                        
                     enc_fps = total_frames / max(enc_time, 0.001)
                     dec_fps = total_frames / max(dec_time, 0.001)
                     
@@ -191,8 +206,24 @@ def run_batch_ablation(media_folder="test_vid", summary_csv="rdo_report_v5.csv",
                     dc = (tel.get("blocks_dct", 0) / total) * 100
                     di = (tel.get("blocks_dithered", 0) / total) * 100
                     
-                    mode_str = (f"Fast: Sk:{sk:.0f} Mo:{mo:.0f} BG:{bg:.0f} So:{so:.0f} Pa:{pa:.0f} Sp:{sp:.0f} || "
-                                f"Arena: Fd:{fm:.1f} DCT:{dc:.1f} Di:{di:.1f}")
+                    fast_mode_str = f"Sk:{sk:.0f} Mo:{mo:.0f} BG:{bg:.0f} So:{so:.0f} Pa:{pa:.0f} Sp:{sp:.0f}"
+                    arena_mode_str = f"Fd:{fm:.1f} DCT:{dc:.1f} Di:{di:.1f}"
+                    
+                    results_data.append({
+                        "Video": video,
+                        "Config": config['name'],
+                        "Size (KB)": round(size_kb, 2),
+                        "Ratio": round(ratio, 3),
+                        "Avg MSE": round(mean_mse, 2),
+                        "Max MSE": round(max_mse, 2),
+                        "Max Block MSE": round(max_block_mse, 2),
+                        "Enc FPS": round(enc_fps, 1),
+                        "Dec FPS": round(dec_fps, 1),
+                        "Fast Modes": fast_mode_str,
+                        "Arena Modes": arena_mode_str
+                    })
+                    
+                    mode_str = f"Fast: {fast_mode_str} || Arena: {arena_mode_str}"
                     
                     # --- Color Logic ---
                     GREEN = '\033[92m'
@@ -213,16 +244,15 @@ def run_batch_ablation(media_folder="test_vid", summary_csv="rdo_report_v5.csv",
                     
                     # Pad strings manually before applying invisible ANSI codes
                     ratio_fmt = f"{' ' * (6 - len(r_txt))}{ratio_color}{r_txt}{RESET}"
-                    mse_fmt = f"{' ' * (5 - len(m_txt))}{mse_color}{m_txt}{RESET}"
-                    
-                    mode_str = (f"Fast: Sk:{sk:.0f} Mo:{mo:.0f} BG:{bg:.0f} So:{so:.0f} Pa:{pa:.0f} Sp:{sp:.0f} || "
-                                f"Arena: Fd:{fm:.1f} DCT:{dc:.1f} Di:{di:.1f}")
+                    mse_fmt = f"{' ' * (6 - len(m_txt))}{mse_color}{m_txt}{RESET}"
                     
                     print(
                         f"{config['name']:<22} | "
                         f"{size_kb:>9.2f} | "
                         f"{ratio_fmt} | "
                         f"{mse_fmt} | "
+                        f"{max_mse:>6.2f} | "
+                        f"{max_block_mse:>6.2f} | "
                         f"{enc_fps:>7.1f} | "
                         f"{dec_fps:>7.1f} | "
                         f"{mode_str}"
@@ -239,7 +269,55 @@ def run_batch_ablation(media_folder="test_vid", summary_csv="rdo_report_v5.csv",
                     traceback.print_exc()
                 finally:
                     if os.path.exists(out_file): os.remove(out_file)
-            print("=" * 145)
+            print("=" * 175)
+
+    if results_data:
+        try:
+            df = pd.DataFrame(results_data)
+            excel_filename = "compression_report_v5.xlsx"
+            writer = pd.ExcelWriter(excel_filename, engine='xlsxwriter')
+            df.to_excel(writer, sheet_name='Benchmark', index=False)
+            
+            workbook = writer.book
+            worksheet = writer.sheets['Benchmark']
+            
+            # Format Definitions
+            format_green = workbook.add_format({'bg_color': '#C6EFCE', 'font_color': '#006100'})
+            format_red = workbook.add_format({'bg_color': '#FFC7CE', 'font_color': '#9C0006'})
+            format_yellow = workbook.add_format({'bg_color': '#FFEB9C', 'font_color': '#9C6500'})
+            
+            # Apply Conditional Formatting
+            # Ratio: Column D
+            worksheet.conditional_format('D2:D1000', {'type': 'cell', 'criteria': '<=', 'value': 1.0, 'format': format_green})
+            worksheet.conditional_format('D2:D1000', {'type': 'cell', 'criteria': '>', 'value': 1.0, 'format': format_red})
+            
+            # Avg MSE: Column E
+            worksheet.conditional_format('E2:E1000', {'type': 'cell', 'criteria': '<=', 'value': 5.0, 'format': format_green})
+            worksheet.conditional_format('E2:E1000', {'type': 'cell', 'criteria': 'between', 'minimum': 5.0, 'maximum': 10.0, 'format': format_yellow})
+            worksheet.conditional_format('E2:E1000', {'type': 'cell', 'criteria': '>', 'value': 10.0, 'format': format_red})
+            
+            # Max Block MSE: Column G
+            worksheet.conditional_format('G2:G1000', {'type': 'cell', 'criteria': '<=', 'value': 15.0, 'format': format_green})
+            worksheet.conditional_format('G2:G1000', {'type': 'cell', 'criteria': 'between', 'minimum': 15.0, 'maximum': 30.0, 'format': format_yellow})
+            worksheet.conditional_format('G2:G1000', {'type': 'cell', 'criteria': '>', 'value': 30.0, 'format': format_red})
+
+            # Enc FPS: Column H
+            worksheet.conditional_format('H2:H1000', {'type': 'cell', 'criteria': '>=', 'value': 24.0, 'format': format_green})
+            worksheet.conditional_format('H2:H1000', {'type': 'cell', 'criteria': '<', 'value': 24.0, 'format': format_yellow})
+
+            # Dec FPS: Column I
+            worksheet.conditional_format('I2:I1000', {'type': 'cell', 'criteria': '>=', 'value': 30.0, 'format': format_green})
+            worksheet.conditional_format('I2:I1000', {'type': 'cell', 'criteria': '<', 'value': 30.0, 'format': format_yellow})
+            
+            # Column Sizing
+            worksheet.set_column('A:A', 25)
+            worksheet.set_column('B:B', 20)
+            worksheet.set_column('J:K', 45)
+            
+            writer.close()
+            print(f"✅ Excel report generated successfully: {excel_filename}")
+        except Exception as e:
+            print(f"⚠️ Failed to write Excel report: {e}")
 
     # Trigger the Git tracker after all tests finish
     GitBenchmarkTracker.generate_report_and_commit(summary_csv, mse_csv)

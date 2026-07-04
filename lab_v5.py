@@ -45,6 +45,7 @@ def run_encoder(video_path, output_path, config, QP=27, LAMBDA=0.012):
         mode_buffer, payload_buffer = bytearray(), bytearray()
         frame_idx = 0
         pbar = tqdm(total=total_frames, desc=f"Enc V5: {config['name']}", unit="f", leave=False)
+        stream = cctx.stream_writer(f)
 
         while True:
             ret, frame = cap.read()
@@ -57,17 +58,18 @@ def run_encoder(video_path, output_path, config, QP=27, LAMBDA=0.012):
                 is_scene_change = True
 
             if prev is None or is_scene_change:
-                compressed = cctx.compress(curr_y.astype(np.uint8).tobytes())
-                f.write(struct.pack("<B", 0))
-                f.write(struct.pack("<I", len(compressed)))
-                f.write(compressed)
+                raw_bytes = curr_y.astype(np.uint8).tobytes()
+                stream.write(struct.pack("<B", 0))
+                stream.write(struct.pack("<I", len(raw_bytes)))
+                stream.write(raw_bytes)
                 prev = curr_y.copy()
                 bg_model = curr_y.copy().astype(np.float32)
+                bg_model_i32 = bg_model.astype(np.int32)
                 frame_idx += 1
                 pbar.update(1)
                 continue
 
-            f.write(struct.pack("<B", 1))
+            stream.write(struct.pack("<B", 1))
             next_prev = prev.copy()
             
             curr_y_i32 = curr_y.astype(np.int32)
@@ -290,7 +292,7 @@ def run_encoder(video_path, output_path, config, QP=27, LAMBDA=0.012):
                                 if np.max(np.abs(test_curr - solid_val)) < 12: w_mult = w_test
                                 else: break
                             elif best_mode == 6:
-                                bg_cand = bg_model[y_min : y_min + BLOCK_SIZE, x_min : x_min + w_test*BLOCK_SIZE].astype(np.int32)
+                                bg_cand = bg_model_i32[y_min : y_min + BLOCK_SIZE, x_min : x_min + w_test*BLOCK_SIZE]
                                 if np.max(np.abs(test_curr - bg_cand)) < 15: w_mult = w_test
                                 else: break
                             elif best_mode in [4, 11]:
@@ -308,7 +310,7 @@ def run_encoder(video_path, output_path, config, QP=27, LAMBDA=0.012):
                                 if np.max(np.abs(test_curr - solid_val)) < 12: h_mult = h_test
                                 else: break
                             elif best_mode == 6:
-                                bg_cand = bg_model[y_min : y_min + h_test*BLOCK_SIZE, x_min : x_min + w_mult*BLOCK_SIZE].astype(np.int32)
+                                bg_cand = bg_model_i32[y_min : y_min + h_test*BLOCK_SIZE, x_min : x_min + w_mult*BLOCK_SIZE]
                                 if np.max(np.abs(test_curr - bg_cand)) < 15: h_mult = h_test
                                 else: break
                             elif best_mode in [4, 11]:
@@ -364,14 +366,14 @@ def run_encoder(video_path, output_path, config, QP=27, LAMBDA=0.012):
             frame_idx += 1
             pbar.update(1)
 
-            comp_modes = cctx.compress(bytes(mode_buffer))
-            comp_payloads = cctx.compress(bytes(payload_buffer))
-            f.write(struct.pack("<II", len(comp_modes), len(comp_payloads)))
-            f.write(comp_modes + comp_payloads)
+            stream.write(struct.pack("<II", len(mode_buffer), len(payload_buffer)))
+            stream.write(mode_buffer)
+            stream.write(payload_buffer)
             mode_buffer.clear()
             payload_buffer.clear()
 
         pbar.close()
+        stream.close()
         
     enc_time = time.time() - start_time
     return enc_time, telemetry
@@ -393,19 +395,20 @@ def decode_and_profile(original_video, encoded_path):
         
         prev = None
         bg_model = None
+        stream = dctx.stream_reader(f)
 
         while True:
             ret, orig_frame = cap.read()
             if not ret: break
             orig_y = cv2.cvtColor(orig_frame[:h, :w], cv2.COLOR_BGR2GRAY)
             
-            type_byte = f.read(1)
+            type_byte = stream.read(1)
             if not type_byte: break 
             frame_type = struct.unpack("<B", type_byte)[0]
 
             if frame_type == 0:
-                size = struct.unpack("<I", f.read(4))[0]
-                prev = np.frombuffer(dctx.decompress(f.read(size)), dtype=np.uint8).reshape((h, w, 1)).astype(np.int16)
+                size = struct.unpack("<I", stream.read(4))[0]
+                prev = np.frombuffer(stream.read(size), dtype=np.uint8).reshape((h, w, 1)).astype(np.int16)
                 bg_model = prev.copy().astype(np.float32)
                 mse = np.mean((orig_y.astype(np.float32) - prev.squeeze().astype(np.float32)) ** 2)
                 frame_mses.append(mse)
@@ -416,9 +419,9 @@ def decode_and_profile(original_video, encoded_path):
                 last_dy, last_dx = 0, 0
                 skip_remaining = 0
                 
-                len_modes, len_payloads = struct.unpack("<II", f.read(8))
-                mode_data = dctx.decompress(f.read(len_modes))
-                payload_data = dctx.decompress(f.read(len_payloads))
+                len_modes, len_payloads = struct.unpack("<II", stream.read(8))
+                mode_data = stream.read(len_modes)
+                payload_data = stream.read(len_payloads)
                 mode_idx, pay_idx = 0, 0
                 
                 for y_idx in range(grid_h):
