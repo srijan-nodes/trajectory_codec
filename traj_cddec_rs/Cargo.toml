@@ -1,0 +1,13 @@
+[package]
+name = "traj_cddec_rs"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+zstd = "0.13"
+byteorder = "1.5"
+image = { version = "0.25", default-features = false, features = ["webp", "png", "jpeg"] }
+clap = { version = "4.5", features = ["derive"] }
+anyhow = "1.0"
+indicatif = "0.17"
+rayon = "1.10"

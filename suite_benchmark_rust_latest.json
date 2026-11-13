@@ -1,0 +1,753 @@
+[
+  {
+    "video": "01_ideal_motion.mp4",
+    "total_frames": 90,
+    "orig_bytes": 83222,
+    "comp_bytes": 2232,
+    "reduction_pct": 97.31801687053904,
+    "enc_fps": 466.04413431409586,
+    "py_enc_fps": 48.9,
+    "enc_speedup": 9.530554893948791,
+    "dec_fps": 3079.2,
+    "py_dec_fps": 128.0,
+    "dec_speedup": 24.05625,
+    "avg_mse": 0.08864084201388889,
+    "max_mse": 0.116201171875,
+    "psnr": 58.65446488029485,
+    "groups": [
+      {
+        "name": "Frames 00-14",
+        "count": 15,
+        "avg_mse": 0.08999674479166668,
+        "max_mse": 0.11417643229166667,
+        "psnr": 58.58853559701736,
+        "is_mark_ok": true
+      },
+      {
+        "name": "Frames 15-29",
+        "count": 15,
+        "avg_mse": 0.0925726996527778,
+        "max_mse": 0.116201171875,
+        "psnr": 58.465974318344394,
+        "is_mark_ok": true
+      },
+      {
+        "name": "Frames 30-44",
+        "count": 15,
+        "avg_mse": 0.08782118055555557,
+        "max_mse": 0.10404622395833334,
+        "psnr": 58.69481089961107,
+        "is_mark_ok": true
+      },
+      {
+        "name": "Frames 45-59",
+        "count": 15,
+        "avg_mse": 0.0843198784722222,
+        "max_mse": 0.102421875,
+        "psnr": 58.871503889349384,
+        "is_mark_ok": true
+      },
+      {
+        "name": "Frames 60-74",
+        "count": 15,
+        "avg_mse": 0.09176085069444444,
+        "max_mse": 0.11237630208333334,
+        "psnr": 58.504229297084564,
+        "is_mark_ok": true
+      },
+      {
+        "name": "Frames 75-89",
+        "count": 15,
+        "avg_mse": 0.08537369791666666,
+        "max_mse": 0.10510091145833333,
+        "psnr": 58.817562678025546,
+        "is_mark_ok": true
+      }
+    ],
+    "nam_path": "C:\\Users\\dsrij\\codes\\traj_cddec\\traj_cddec_rs\\output\\01_ideal_motion.nam",
+    "decoded_mp4": "C:\\Users\\dsrij\\codes\\traj_cddec\\traj_cddec_rs\\output\\01_ideal_motion_rust_decoded.mp4",
+    "sbs_mp4": "C:\\Users\\dsrij\\codes\\traj_cddec\\traj_cddec_rs\\output\\01_ideal_motion_rust_sbs.mp4"
+  },
+  {
+    "video": "02_ideal_cache.mp4",
+    "total_frames": 90,
+    "orig_bytes": 75424,
+    "comp_bytes": 2534,
+    "reduction_pct": 96.64032668646585,
+    "enc_fps": 491.829955336436,
+    "py_enc_fps": 87.3,
+    "enc_speedup": 5.63379101187212,
+    "dec_fps": 3413.3,
+    "py_dec_fps": 164.9,
+    "dec_speedup": 20.699211643420256,
+    "avg_mse": 0.08887373408564815,
+    "max_mse": 0.2139453125,
+    "psnr": 58.64306933161402,
+    "groups": [
+      {
+        "name": "Frames 00-14",
+        "count": 15,
+        "avg_mse": 0.16970724826388886,
+        "max_mse": 0.2139453125,
+        "psnr": 55.8337996926452,
+        "is_mark_ok": true
+      },
+      {
+        "name": "Frames 15-29",
+        "count": 15,
+        "avg_mse": 0.0011484375,
+        "max_mse": 0.0019140625,
+        "psnr": 77.52972995767603,
+        "is_mark_ok": true
+      },
+      {
+        "name": "Frames 30-44",
+        "count": 15,
+        "avg_mse": 0.1783116319444444,
+        "max_mse": 0.181953125,
+        "psnr": 55.61900686091255,
+        "is_mark_ok": true
+      },
+      {
+        "name": "Frames 45-59",
+        "count": 15,
+        "avg_mse": 0.0003671875,
+        "max_mse": 0.0018359375,
+        "psnr": 82.48192472580061,
+        "is_mark_ok": true
+      },
+      {
+        "name": "Frames 60-74",
+        "count": 15,
+        "avg_mse": 0.18255946180555552,
+        "max_mse": 0.18958333333333333,
+        "psnr": 55.516760141137866,
+        "is_mark_ok": true
+      },
+      {
+        "name": "Frames 75-89",
+        "count": 15,
+        "avg_mse": 0.0011484375,
+        "max_mse": 0.0019140625,
+        "psnr": 77.52972995767603,
+        "is_mark_ok": true
+      }
+    ],
+    "nam_path": "C:\\Users\\dsrij\\codes\\traj_cddec\\traj_cddec_rs\\output\\02_ideal_cache.nam",
+    "decoded_mp4": "C:\\Users\\dsrij\\codes\\traj_cddec\\traj_cddec_rs\\output\\02_ideal_cache_rust_decoded.mp4",
+    "sbs_mp4": "C:\\Users\\dsrij\\codes\\traj_cddec\\traj_cddec_rs\\output\\02_ideal_cache_rust_sbs.mp4"
+  },
+  {
+    "video": "03_ideal_palette.mp4",
+    "total_frames": 90,
+    "orig_bytes": 74288,
+    "comp_bytes": 595,
+    "reduction_pct": 99.1990631057506,
+    "enc_fps": 520.1613863350751,
+    "py_enc_fps": 90.7,
+    "enc_speedup": 5.734965670728502,
+    "dec_fps": 3342.4,
+    "py_dec_fps": 163.0,
+    "dec_speedup": 20.505521472392637,
+    "avg_mse": 0.23606148726851856,
+    "max_mse": 0.23982096354166665,
+    "psnr": 54.40055221866604,
+    "groups": [
+      {
+        "name": "Frames 00-14",
+        "count": 15,
+        "avg_mse": 0.2177237413194444,
+        "max_mse": 0.239716796875,
+        "psnr": 54.75174572332789,
+        "is_mark_ok": true
+      },
+      {
+        "name": "Frames 15-29",
+        "count": 15,
+        "avg_mse": 0.23971679687499992,
+        "max_mse": 0.239716796875,
+        "psnr": 54.33381894900389,
+        "is_mark_ok": true
+      },
+      {
+        "name": "Frames 30-44",
+        "count": 15,
+        "avg_mse": 0.23971679687499992,
+        "max_mse": 0.239716796875,
+        "psnr": 54.33381894900389,
+        "is_mark_ok": true
+      },
+      {
+        "name": "Frames 45-59",
+        "count": 15,
+        "avg_mse": 0.23971679687499992,
+        "max_mse": 0.239716796875,
+        "psnr": 54.33381894900389,
+        "is_mark_ok": true
+      },
+      {
+        "name": "Frames 60-74",
+        "count": 15,
+        "avg_mse": 0.23974717881944455,
+        "max_mse": 0.23976236979166668,
+        "psnr": 54.333268554750795,
+        "is_mark_ok": true
+      },
+      {
+        "name": "Frames 75-89",
+        "count": 15,
+        "avg_mse": 0.23974761284722224,
+        "max_mse": 0.23982096354166665,
+        "psnr": 54.33326069248109,
+        "is_mark_ok": true
+      }
+    ],
+    "nam_path": "C:\\Users\\dsrij\\codes\\traj_cddec\\traj_cddec_rs\\output\\03_ideal_palette.nam",
+    "decoded_mp4": "C:\\Users\\dsrij\\codes\\traj_cddec\\traj_cddec_rs\\output\\03_ideal_palette_rust_decoded.mp4",
+    "sbs_mp4": "C:\\Users\\dsrij\\codes\\traj_cddec\\traj_cddec_rs\\output\\03_ideal_palette_rust_sbs.mp4"
+  },
+  {
+    "video": "04_ideal_baseline.mp4",
+    "total_frames": 90,
+    "orig_bytes": 274445,
+    "comp_bytes": 415,
+    "reduction_pct": 99.84878573120297,
+    "enc_fps": 363.56465166450766,
+    "py_enc_fps": 36.4,
+    "enc_speedup": 9.988039880893067,
+    "dec_fps": 2547.3,
+    "py_dec_fps": 204.2,
+    "dec_speedup": 12.474534769833499,
+    "avg_mse": 2.430740740740741,
+    "max_mse": 25.0,
+    "psnr": 44.273417207699744,
+    "groups": [
+      {
+        "name": "Frames 00-14",
+        "count": 15,
+        "avg_mse": 2.6694027777777776,
+        "max_mse": 25.0,
+        "psnr": 43.86666252809597,
+        "is_mark_ok": true
+      },
+      {
+        "name": "Frames 15-29",
+        "count": 15,
+        "avg_mse": 3.600013888888889,
+        "max_mse": 16.0,
+        "psnr": 42.56776184585021,
+        "is_mark_ok": true
+      },
+      {
+        "name": "Frames 30-44",
+        "count": 15,
+        "avg_mse": 1.9333333333333333,
+        "max_mse": 16.0,
+        "psnr": 45.267736220246356,
+        "is_mark_ok": true
+      },
+      {
+        "name": "Frames 45-59",
+        "count": 15,
+        "avg_mse": 2.1327777777777777,
+        "max_mse": 16.0,
+        "psnr": 44.841347538538116,
+        "is_mark_ok": true
+      },
+      {
+        "name": "Frames 60-74",
+        "count": 15,
+        "avg_mse": 0.8655416666666668,
+        "max_mse": 4.0,
+        "psnr": 48.75792381472385,
+        "is_mark_ok": true
+      },
+      {
+        "name": "Frames 75-89",
+        "count": 15,
+        "avg_mse": 3.383375,
+        "max_mse": 9.0,
+        "psnr": 42.83730224917064,
+        "is_mark_ok": true
+      }
+    ],
+    "nam_path": "C:\\Users\\dsrij\\codes\\traj_cddec\\traj_cddec_rs\\output\\04_ideal_baseline.nam",
+    "decoded_mp4": "C:\\Users\\dsrij\\codes\\traj_cddec\\traj_cddec_rs\\output\\04_ideal_baseline_rust_decoded.mp4",
+    "sbs_mp4": "C:\\Users\\dsrij\\codes\\traj_cddec\\traj_cddec_rs\\output\\04_ideal_baseline_rust_sbs.mp4"
+  },
+  {
+    "video": "05_break_entropy.mp4",
+    "total_frames": 90,
+    "orig_bytes": 7608606,
+    "comp_bytes": 25435220,
+    "reduction_pct": -234.29540181210592,
+    "enc_fps": 15.035642836280026,
+    "py_enc_fps": 0.0,
+    "enc_speedup": 0.0,
+    "dec_fps": 2588.1,
+    "py_dec_fps": 0.0,
+    "dec_speedup": 0.0,
+    "avg_mse": 20.635719039351848,
+    "max_mse": 38.34805338541667,
+    "psnr": 34.98460754658004,
+    "groups": [
+      {
+        "name": "Frames 00-14",
+        "count": 15,
+        "avg_mse": 30.27796788194444,
+        "max_mse": 38.34805338541667,
+        "psnr": 33.31953636911519,
+        "is_mark_ok": false
+      },
+      {
+        "name": "Frames 15-29",
+        "count": 15,
+        "avg_mse": 17.800197916666665,
+        "max_mse": 18.334371744791667,
+        "psnr": 35.62655529702929,
+        "is_mark_ok": false
+      },
+      {
+        "name": "Frames 30-44",
+        "count": 15,
+        "avg_mse": 17.764220486111114,
+        "max_mse": 18.185843098958333,
+        "psnr": 35.63534205952675,
+        "is_mark_ok": false
+      },
+      {
+        "name": "Frames 45-59",
+        "count": 15,
+        "avg_mse": 17.582645833333334,
+        "max_mse": 18.222242838541668,
+        "psnr": 35.67996132658236,
+        "is_mark_ok": false
+      },
+      {
+        "name": "Frames 60-74",
+        "count": 15,
+        "avg_mse": 19.473870225694444,
+        "max_mse": 23.308876953125,
+        "psnr": 35.23628089336097,
+        "is_mark_ok": false
+      },
+      {
+        "name": "Frames 75-89",
+        "count": 15,
+        "avg_mse": 20.915411892361114,
+        "max_mse": 23.31179361979167,
+        "psnr": 34.92613939198779,
+        "is_mark_ok": false
+      }
+    ],
+    "nam_path": "C:\\Users\\dsrij\\codes\\traj_cddec\\traj_cddec_rs\\output\\05_break_entropy.nam",
+    "decoded_mp4": "C:\\Users\\dsrij\\codes\\traj_cddec\\traj_cddec_rs\\output\\05_break_entropy_rust_decoded.mp4",
+    "sbs_mp4": "C:\\Users\\dsrij\\codes\\traj_cddec\\traj_cddec_rs\\output\\05_break_entropy_rust_sbs.mp4"
+  },
+  {
+    "video": "06_break_jitter.mp4",
+    "total_frames": 90,
+    "orig_bytes": 99745,
+    "comp_bytes": 3490,
+    "reduction_pct": 96.50107774825806,
+    "enc_fps": 305.91341104469484,
+    "py_enc_fps": 62.1,
+    "enc_speedup": 4.926141884777695,
+    "dec_fps": 3211.7,
+    "py_dec_fps": 172.4,
+    "dec_speedup": 18.62935034802784,
+    "avg_mse": 0.07020334201388888,
+    "max_mse": 0.5926627604166667,
+    "psnr": 59.667225737574405,
+    "groups": [
+      {
+        "name": "Frames 00-14",
+        "count": 15,
+        "avg_mse": 0.10031011284722222,
+        "max_mse": 0.517626953125,
+        "psnr": 58.117356418819064,
+        "is_mark_ok": true
+      },
+      {
+        "name": "Frames 15-29",
+        "count": 15,
+        "avg_mse": 0.08736132812500001,
+        "max_mse": 0.566318359375,
+        "psnr": 58.71761133023568,
+        "is_mark_ok": true
+      },
+      {
+        "name": "Frames 30-44",
+        "count": 15,
+        "avg_mse": 0.025101128472222223,
+        "max_mse": 0.04210611979166667,
+        "psnr": 64.13387114357293,
+        "is_mark_ok": true
+      },
+      {
+        "name": "Frames 45-59",
+        "count": 15,
+        "avg_mse": 0.0658439670138889,
+        "max_mse": 0.41232421875,
+        "psnr": 59.94564372194367,
+        "is_mark_ok": true
+      },
+      {
+        "name": "Frames 60-74",
+        "count": 15,
+        "avg_mse": 0.10713172743055556,
+        "max_mse": 0.5926627604166667,
+        "psnr": 57.83162253178375,
+        "is_mark_ok": true
+      },
+      {
+        "name": "Frames 75-89",
+        "count": 15,
+        "avg_mse": 0.035471788194444444,
+        "max_mse": 0.10521158854166666,
+        "psnr": 62.6319727830506,
+        "is_mark_ok": true
+      }
+    ],
+    "nam_path": "C:\\Users\\dsrij\\codes\\traj_cddec\\traj_cddec_rs\\output\\06_break_jitter.nam",
+    "decoded_mp4": "C:\\Users\\dsrij\\codes\\traj_cddec\\traj_cddec_rs\\output\\06_break_jitter_rust_decoded.mp4",
+    "sbs_mp4": "C:\\Users\\dsrij\\codes\\traj_cddec\\traj_cddec_rs\\output\\06_break_jitter_rust_sbs.mp4"
+  },
+  {
+    "video": "07_break_fade.mp4",
+    "total_frames": 90,
+    "orig_bytes": 75003,
+    "comp_bytes": 6328,
+    "reduction_pct": 91.5630041465008,
+    "enc_fps": 304.41301560420953,
+    "py_enc_fps": 54.5,
+    "enc_speedup": 5.585559919343294,
+    "dec_fps": 3153.1,
+    "py_dec_fps": 162.2,
+    "dec_speedup": 19.439580764488287,
+    "avg_mse": 0.5730608723958334,
+    "max_mse": 0.958271484375,
+    "psnr": 50.54879604273168,
+    "groups": [
+      {
+        "name": "Frames 00-14",
+        "count": 15,
+        "avg_mse": 0.4037365451388889,
+        "max_mse": 0.77623046875,
+        "psnr": 52.06982298517734,
+        "is_mark_ok": true
+      },
+      {
+        "name": "Frames 15-29",
+        "count": 15,
+        "avg_mse": 0.5397046440972222,
+        "max_mse": 0.7286067708333334,
+        "psnr": 50.80924205731881,
+        "is_mark_ok": true
+      },
+      {
+        "name": "Frames 30-44",
+        "count": 15,
+        "avg_mse": 0.7019856770833333,
+        "max_mse": 0.958271484375,
+        "psnr": 49.66752109745414,
+        "is_mark_ok": true
+      },
+      {
+        "name": "Frames 45-59",
+        "count": 15,
+        "avg_mse": 0.5871744791666667,
+        "max_mse": 0.7426790364583333,
+        "psnr": 50.4431318963761,
+        "is_mark_ok": true
+      },
+      {
+        "name": "Frames 60-74",
+        "count": 15,
+        "avg_mse": 0.6693717447916666,
+        "max_mse": 0.8594759114583334,
+        "psnr": 49.87412984695646,
+        "is_mark_ok": true
+      },
+      {
+        "name": "Frames 75-89",
+        "count": 15,
+        "avg_mse": 0.5363921440972221,
+        "max_mse": 0.7183170572916666,
+        "psnr": 50.835979522405694,
+        "is_mark_ok": true
+      }
+    ],
+    "nam_path": "C:\\Users\\dsrij\\codes\\traj_cddec\\traj_cddec_rs\\output\\07_break_fade.nam",
+    "decoded_mp4": "C:\\Users\\dsrij\\codes\\traj_cddec\\traj_cddec_rs\\output\\07_break_fade_rust_decoded.mp4",
+    "sbs_mp4": "C:\\Users\\dsrij\\codes\\traj_cddec\\traj_cddec_rs\\output\\07_break_fade_rust_sbs.mp4"
+  },
+  {
+    "video": "08_break_moire.mp4",
+    "total_frames": 90,
+    "orig_bytes": 730432,
+    "comp_bytes": 229,
+    "reduction_pct": 99.96864869009025,
+    "enc_fps": 482.1593286584665,
+    "py_enc_fps": 94.6,
+    "enc_speedup": 5.09682165600916,
+    "dec_fps": 2997.7,
+    "py_dec_fps": 167.4,
+    "dec_speedup": 17.907407407407405,
+    "avg_mse": 1.5781871383101853,
+    "max_mse": 10.083333333333334,
+    "psnr": 46.149218611601164,
+    "groups": [
+      {
+        "name": "Frames 00-14",
+        "count": 15,
+        "avg_mse": 3.2676026475694444,
+        "max_mse": 10.083333333333334,
+        "psnr": 42.98851121593819,
+        "is_mark_ok": true
+      },
+      {
+        "name": "Frames 15-29",
+        "count": 15,
+        "avg_mse": 2.3512076822916663,
+        "max_mse": 2.3512076822916668,
+        "psnr": 44.41789368795432,
+        "is_mark_ok": true
+      },
+      {
+        "name": "Frames 30-44",
+        "count": 15,
+        "avg_mse": 1.3701562500000002,
+        "max_mse": 1.48015625,
+        "psnr": 46.76310264774699,
+        "is_mark_ok": true
+      },
+      {
+        "name": "Frames 45-59",
+        "count": 15,
+        "avg_mse": 1.48015625,
+        "max_mse": 1.48015625,
+        "psnr": 46.42772797546607,
+        "is_mark_ok": true
+      },
+      {
+        "name": "Frames 60-74",
+        "count": 15,
+        "avg_mse": 0.5,
+        "max_mse": 0.5,
+        "psnr": 51.141103565318915,
+        "is_mark_ok": true
+      },
+      {
+        "name": "Frames 75-89",
+        "count": 15,
+        "avg_mse": 0.5,
+        "max_mse": 0.5,
+        "psnr": 51.141103565318915,
+        "is_mark_ok": true
+      }
+    ],
+    "nam_path": "C:\\Users\\dsrij\\codes\\traj_cddec\\traj_cddec_rs\\output\\08_break_moire.nam",
+    "decoded_mp4": "C:\\Users\\dsrij\\codes\\traj_cddec\\traj_cddec_rs\\output\\08_break_moire_rust_decoded.mp4",
+    "sbs_mp4": "C:\\Users\\dsrij\\codes\\traj_cddec\\traj_cddec_rs\\output\\08_break_moire_rust_sbs.mp4"
+  },
+  {
+    "video": "09_scaling_ui.mp4",
+    "total_frames": 90,
+    "orig_bytes": 105331,
+    "comp_bytes": 4700,
+    "reduction_pct": 95.53787583902175,
+    "enc_fps": 356.02006228437665,
+    "py_enc_fps": 55.5,
+    "enc_speedup": 6.4147758970157955,
+    "dec_fps": 3168.7,
+    "py_dec_fps": 177.9,
+    "dec_speedup": 17.811691961776276,
+    "avg_mse": 0.7786303168402778,
+    "max_mse": 4.659716796875,
+    "psnr": 49.21749051416267,
+    "groups": [
+      {
+        "name": "Frames 00-14",
+        "count": 15,
+        "avg_mse": 0.16373242187499995,
+        "max_mse": 0.3856022135416667,
+        "psnr": 55.98945675058857,
+        "is_mark_ok": true
+      },
+      {
+        "name": "Frames 15-29",
+        "count": 15,
+        "avg_mse": 0.35387803819444447,
+        "max_mse": 0.440322265625,
+        "psnr": 52.642267498747074,
+        "is_mark_ok": true
+      },
+      {
+        "name": "Frames 30-44",
+        "count": 15,
+        "avg_mse": 0.5486571180555556,
+        "max_mse": 0.607314453125,
+        "psnr": 50.737793429346524,
+        "is_mark_ok": true
+      },
+      {
+        "name": "Frames 45-59",
+        "count": 15,
+        "avg_mse": 0.6968556857638889,
+        "max_mse": 0.834765625,
+        "psnr": 49.69937512993334,
+        "is_mark_ok": true
+      },
+      {
+        "name": "Frames 60-74",
+        "count": 15,
+        "avg_mse": 1.600648654513889,
+        "max_mse": 4.659716796875,
+        "psnr": 46.087843469693794,
+        "is_mark_ok": true
+      },
+      {
+        "name": "Frames 75-89",
+        "count": 15,
+        "avg_mse": 1.3080099826388891,
+        "max_mse": 3.199833984375,
+        "psnr": 46.96469302362505,
+        "is_mark_ok": true
+      }
+    ],
+    "nam_path": "C:\\Users\\dsrij\\codes\\traj_cddec\\traj_cddec_rs\\output\\09_scaling_ui.nam",
+    "decoded_mp4": "C:\\Users\\dsrij\\codes\\traj_cddec\\traj_cddec_rs\\output\\09_scaling_ui_rust_decoded.mp4",
+    "sbs_mp4": "C:\\Users\\dsrij\\codes\\traj_cddec\\traj_cddec_rs\\output\\09_scaling_ui_rust_sbs.mp4"
+  },
+  {
+    "video": "ball.mp4",
+    "total_frames": 101,
+    "orig_bytes": 104443,
+    "comp_bytes": 77963,
+    "reduction_pct": 25.353542123454897,
+    "enc_fps": 64.77899570275454,
+    "py_enc_fps": 63.6,
+    "enc_speedup": 1.0185376682823042,
+    "dec_fps": 522.2,
+    "py_dec_fps": 59.2,
+    "dec_speedup": 8.820945945945946,
+    "avg_mse": 0.9615878631448671,
+    "max_mse": 2.057963065982972,
+    "psnr": 48.30091387701006,
+    "groups": [
+      {
+        "name": "Frames 00-20 (Descent & Primary Impact)",
+        "count": 21,
+        "avg_mse": 1.0133805331343066,
+        "max_mse": 1.3210562596749227,
+        "psnr": 48.07307803555407,
+        "is_mark_ok": true
+      },
+      {
+        "name": "Frames 21-40 (Rebound Lift-Off & Floor Shadow)",
+        "count": 20,
+        "avg_mse": 0.741080658620356,
+        "max_mse": 0.8630569127321981,
+        "psnr": 49.432148820554204,
+        "is_mark_ok": true
+      },
+      {
+        "name": "Frames 41-60 (Apex Ascent & Free Flight)",
+        "count": 20,
+        "avg_mse": 0.7557843036474458,
+        "max_mse": 0.8071304179566563,
+        "psnr": 49.3468249274985,
+        "is_mark_ok": true
+      },
+      {
+        "name": "Frames 61-80 (Secondary Descent & Approach)",
+        "count": 20,
+        "avg_mse": 0.7779789691369969,
+        "max_mse": 0.9204939047987616,
+        "psnr": 49.22112503866914,
+        "is_mark_ok": true
+      },
+      {
+        "name": "Frames 81-100 (Secondary Contact & Settle)",
+        "count": 20,
+        "avg_mse": 1.5171252176857584,
+        "max_mse": 2.057963065982972,
+        "psnr": 46.32058933604129,
+        "is_mark_ok": true
+      }
+    ],
+    "nam_path": "C:\\Users\\dsrij\\codes\\traj_cddec\\traj_cddec_rs\\output\\ball.nam",
+    "decoded_mp4": "C:\\Users\\dsrij\\codes\\traj_cddec\\traj_cddec_rs\\output\\ball_rust_decoded.mp4",
+    "sbs_mp4": "C:\\Users\\dsrij\\codes\\traj_cddec\\traj_cddec_rs\\output\\ball_rust_sbs.mp4"
+  },
+  {
+    "video": "countdown.mp4",
+    "total_frames": 755,
+    "orig_bytes": 1555782,
+    "comp_bytes": 1381472,
+    "reduction_pct": 11.20401187312875,
+    "enc_fps": 22.71160626297937,
+    "py_enc_fps": 3.7,
+    "enc_speedup": 6.138271962967397,
+    "dec_fps": 340.3,
+    "py_dec_fps": 14.3,
+    "dec_speedup": 23.797202797202797,
+    "avg_mse": 4.39852928098024,
+    "max_mse": 11.813527576958956,
+    "psnr": 41.697728734560016,
+    "groups": [
+      {
+        "name": "Frames 000-125 (Initial Countdown '3')",
+        "count": 126,
+        "avg_mse": 2.753307850010859,
+        "max_mse": 7.106671719527363,
+        "psnr": 43.732255878740474,
+        "is_mark_ok": true
+      },
+      {
+        "name": "Frames 126-250 (Digit Transition '2')",
+        "count": 125,
+        "avg_mse": 3.4617911963619408,
+        "max_mse": 7.981331137282338,
+        "psnr": 42.73779491725583,
+        "is_mark_ok": true
+      },
+      {
+        "name": "Frames 251-375 (Digit Transition '1')",
+        "count": 125,
+        "avg_mse": 3.574235338930348,
+        "max_mse": 6.208621443563433,
+        "psnr": 42.59897216438084,
+        "is_mark_ok": true
+      },
+      {
+        "name": "Frames 376-500 ('0' & Explosion Start)",
+        "count": 125,
+        "avg_mse": 4.473931658115671,
+        "max_mse": 11.813527576958956,
+        "psnr": 41.62391015155117,
+        "is_mark_ok": true
+      },
+      {
+        "name": "Frames 501-625 (Fireworks Spark Cascade 1)",
+        "count": 125,
+        "avg_mse": 6.0625940453980105,
+        "max_mse": 6.526295281405472,
+        "psnr": 40.304218722546025,
+        "is_mark_ok": true
+      },
+      {
+        "name": "Frames 626-754 (Fireworks Spark Cascade 2)",
+        "count": 129,
+        "avg_mse": 6.026385954945477,
+        "max_mse": 6.487842525652985,
+        "psnr": 40.33023418605997,
+        "is_mark_ok": true
+      }
+    ],
+    "nam_path": "C:\\Users\\dsrij\\codes\\traj_cddec\\traj_cddec_rs\\output\\countdown.nam",
+    "decoded_mp4": "C:\\Users\\dsrij\\codes\\traj_cddec\\traj_cddec_rs\\output\\countdown_rust_decoded.mp4",
+    "sbs_mp4": "C:\\Users\\dsrij\\codes\\traj_cddec\\traj_cddec_rs\\output\\countdown_rust_sbs.mp4"
+  }
+]

@@ -1,0 +1,28 @@
+[
+  {
+    "video": "01_ideal_motion.mp4",
+    "total_frames": 90,
+    "orig_bytes": 83222,
+    "py_comp_bytes": 4390,
+    "rs_comp_bytes": 2232,
+    "py_enc_fps": 48.85424356344819,
+    "rs_enc_fps": 151.3,
+    "enc_speedup": 3.0969674068027073,
+    "py_dec_fps": 127.97070982898812,
+    "rs_dec_fps": 3051.6,
+    "dec_speedup": 23.846081686019897,
+    "py_avg_mse": 0.21643391927083333,
+    "py_psnr": 54.777550369759666,
+    "rs_avg_mse": 0.4518062789351852,
+    "rs_psnr": 51.5812809867499,
+    "group_results": [
+      {
+        "name": "Frames 00-14",
+        "count": 15,
+        "py_avg_mse": 0.1980327690972222,
+        "py_max_mse": 0.31279622395833334,
+        "py_psnr": 55.16343300603473,
+        "rs_avg_mse": 0.4476664496527778,
+        "rs_max_mse": 0.4951302083333333,
+        "rs_psnr": 51.62125813450408,
+        "is_mark_ok": 

@@ -1,0 +1,703 @@
+[
+  {
+    "video": "01_ideal_motion.mp4",
+    "orig_bytes": 83222,
+    "comp_bytes": 2232,
+    "total_frames": 90,
+    "py_enc_fps": 48.9,
+    "rs_enc_fps": 500.8,
+    "enc_speedup": 10.241308793456033,
+    "py_dec_fps": 128.0,
+    "rs_dec_fps": 3309.3,
+    "dec_speedup": 25.85390625,
+    "avg_mse": 0.4518062789351852,
+    "max_mse": 0.4951302083333333,
+    "psnr": 51.5812809867499,
+    "groups": [
+      {
+        "group": "Frames 00-14",
+        "frames": 15,
+        "avg_mse": 0.4476664496527778,
+        "max_mse": 0.4951302083333333,
+        "roll5_mse": 0.46424023437499995,
+        "psnr": 51.62125813450408,
+        "status": "PASS (Optimal)"
+      },
+      {
+        "group": "Frames 15-29",
+        "frames": 15,
+        "avg_mse": 0.4577037760416667,
+        "max_mse": 0.487607421875,
+        "roll5_mse": 0.4778307291666667,
+        "psnr": 51.524958655101,
+        "status": "PASS (Optimal)"
+      },
+      {
+        "group": "Frames 30-44",
+        "frames": 15,
+        "avg_mse": 0.4493072916666666,
+        "max_mse": 0.4708203125,
+        "roll5_mse": 0.4604830729166666,
+        "psnr": 51.60536894189193,
+        "status": "PASS (Optimal)"
+      },
+      {
+        "group": "Frames 45-59",
+        "frames": 15,
+        "avg_mse": 0.44666883680555547,
+        "max_mse": 0.47439778645833336,
+        "roll5_mse": 0.4527376302083333,
+        "psnr": 51.63094707199508,
+        "status": "PASS (Optimal)"
+      },
+      {
+        "group": "Frames 60-74",
+        "frames": 15,
+        "avg_mse": 0.46627322048611114,
+        "max_mse": 0.4950944010416667,
+        "roll5_mse": 0.4778307291666667,
+        "psnr": 51.444398875731494,
+        "status": "PASS (Optimal)"
+      },
+      {
+        "group": "Frames 75-89",
+        "frames": 15,
+        "avg_mse": 0.4432180989583332,
+        "max_mse": 0.4708203125,
+        "roll5_mse": 0.4585807291666667,
+        "psnr": 51.66462874225963,
+        "status": "PASS (Optimal)"
+      }
+    ]
+  },
+  {
+    "video": "02_ideal_cache.mp4",
+    "orig_bytes": 75424,
+    "comp_bytes": 2529,
+    "total_frames": 90,
+    "py_enc_fps": 87.3,
+    "rs_enc_fps": 560.8,
+    "enc_speedup": 6.423825887743413,
+    "py_dec_fps": 164.9,
+    "rs_dec_fps": 3470.6,
+    "dec_speedup": 21.046694966646452,
+    "avg_mse": 0.9489823495370369,
+    "max_mse": 1.9651888020833332,
+    "psnr": 48.35822225964279,
+    "groups": [
+      {
+        "group": "Frames 00-14",
+        "frames": 15,
+        "avg_mse": 1.835634114583333,
+        "max_mse": 1.889033203125,
+        "roll5_mse": 1.8621438802083332,
+        "psnr": 45.4929424056744,
+        "status": "PASS (Optimal)"
+      },
+      {
+        "group": "Frames 15-29",
+        "frames": 15,
+        "avg_mse": 0.0010703125,
+        "max_mse": 0.0017838541666666667,
+        "roll5_mse": 0.0017838541666666667,
+        "psnr": 77.83569763359372,
+        "status": "PASS (Optimal)"
+      },
+      {
+        "group": "Frames 30-44",
+        "frames": 15,
+        "avg_mse": 1.9293528645833338,
+        "max_mse": 1.9651888020833332,
+        "roll5_mse": 1.9382825520833333,
+        "psnr": 45.27668696662775,
+        "status": "PASS (Optimal)"
+      },
+      {
+        "group": "Frames 45-59",
+        "frames": 15,
+        "avg_mse": 0.00035677083333333334,
+        "max_mse": 0.0017838541666666667,
+        "roll5_mse": 0.0010703125,
+        "psnr": 82.60691018079035,
+        "status": "PASS (Optimal)"
+      },
+      {
+        "group": "Frames 60-74",
+        "frames": 15,
+        "avg_mse": 1.9264097222222227,
+        "max_mse": 1.9578125,
+        "roll5_mse": 1.9308958333333333,
+        "psnr": 45.283316994832816,
+        "status": "PASS (Optimal)"
+      },
+      {
+        "group": "Frames 75-89",
+        "frames": 15,
+        "avg_mse": 0.0010703125,
+        "max_mse": 0.0017838541666666667,
+        "roll5_mse": 0.0017838541666666667,
+        "psnr": 77.83569763359372,
+        "status": "PASS (Optimal)"
+      }
+    ]
+  },
+  {
+    "video": "03_ideal_palette.mp4",
+    "orig_bytes": 74288,
+    "comp_bytes": 595,
+    "total_frames": 90,
+    "py_enc_fps": 90.7,
+    "rs_enc_fps": 520.7,
+    "enc_speedup": 5.74090407938258,
+    "py_dec_fps": 163.0,
+    "rs_dec_fps": 3216.4,
+    "dec_speedup": 19.73251533742331,
+    "avg_mse": 3.2327298900462966,
+    "max_mse": 3.243014322916667,
+    "psnr": 43.03510942109448,
+    "groups": [
+      {
+        "group": "Frames 00-14",
+        "frames": 15,
+        "avg_mse": 3.1813077256944444,
+        "max_mse": 3.243014322916667,
+        "roll5_mse": 3.2122708333333336,
+        "psnr": 43.10474680724017,
+        "status": "PASS (Up to Mark)"
+      },
+      {
+        "group": "Frames 15-29",
+        "frames": 15,
+        "avg_mse": 3.243014322916666,
+        "max_mse": 3.243014322916667,
+        "roll5_mse": 3.243014322916667,
+        "psnr": 43.02131494109851,
+        "status": "PASS (Up to Mark)"
+      },
+      {
+        "group": "Frames 30-44",
+        "frames": 15,
+        "avg_mse": 3.243014322916666,
+        "max_mse": 3.243014322916667,
+        "roll5_mse": 3.243014322916667,
+        "psnr": 43.02131494109851,
+        "status": "PASS (Up to Mark)"
+      },
+      {
+        "group": "Frames 45-59",
+        "frames": 15,
+        "avg_mse": 3.243014322916666,
+        "max_mse": 3.243014322916667,
+        "roll5_mse": 3.243014322916667,
+        "psnr": 43.02131494109851,
+        "status": "PASS (Up to Mark)"
+      },
+      {
+        "group": "Frames 60-74",
+        "frames": 15,
+        "avg_mse": 3.243014322916666,
+        "max_mse": 3.243014322916667,
+        "roll5_mse": 3.243014322916667,
+        "psnr": 43.02131494109851,
+        "status": "PASS (Up to Mark)"
+      },
+      {
+        "group": "Frames 75-89",
+        "frames": 15,
+        "avg_mse": 3.243014322916666,
+        "max_mse": 3.243014322916667,
+        "roll5_mse": 3.243014322916667,
+        "psnr": 43.02131494109851,
+        "status": "PASS (Up to Mark)"
+      }
+    ]
+  },
+  {
+    "video": "04_ideal_baseline.mp4",
+    "orig_bytes": 274445,
+    "comp_bytes": 415,
+    "total_frames": 90,
+    "py_enc_fps": 36.4,
+    "rs_enc_fps": 367.9,
+    "enc_speedup": 10.107142857142858,
+    "py_dec_fps": 204.2,
+    "rs_dec_fps": 2221.3,
+    "dec_speedup": 10.87806072477963,
+    "avg_mse": 3.6777777777777776,
+    "max_mse": 25.0,
+    "psnr": 42.47494876531516,
+    "groups": [
+      {
+        "group": "Frames 00-14",
+        "frames": 15,
+        "avg_mse": 2.6,
+        "max_mse": 9.0,
+        "roll5_mse": 3.6,
+        "psnr": 43.98107012897093,
+        "status": "PASS (Up to Mark)"
+      },
+      {
+        "group": "Frames 15-29",
+        "frames": 15,
+        "avg_mse": 6.733333333333333,
+        "max_mse": 25.0,
+        "roll5_mse": 13.6,
+        "psnr": 39.848502461409495,
+        "status": "SUB-OPTIMAL"
+      },
+      {
+        "group": "Frames 30-44",
+        "frames": 15,
+        "avg_mse": 4.866666666666666,
+        "max_mse": 25.0,
+        "roll5_mse": 10.8,
+        "psnr": 41.25848759803135,
+        "status": "PASS (Up to Mark)"
+      },
+      {
+        "group": "Frames 45-59",
+        "frames": 15,
+        "avg_mse": 2.066666666666667,
+        "max_mse": 4.0,
+        "roll5_mse": 3.4,
+        "psnr": 44.97809926089319,
+        "status": "PASS (Up to Mark)"
+      },
+      {
+        "group": "Frames 60-74",
+        "frames": 15,
+        "avg_mse": 2.066666666666667,
+        "max_mse": 4.0,
+        "roll5_mse": 2.8,
+        "psnr": 44.97809926089319,
+        "status": "PASS (Up to Mark)"
+      },
+      {
+        "group": "Frames 75-89",
+        "frames": 15,
+        "avg_mse": 3.7333333333333334,
+        "max_mse": 16.0,
+        "roll5_mse": 8.2,
+        "psnr": 42.409835929173916,
+        "status": "PASS (Up to Mark)"
+      }
+    ]
+  },
+  {
+    "video": "06_break_jitter.mp4",
+    "orig_bytes": 99745,
+    "comp_bytes": 3518,
+    "total_frames": 90,
+    "py_enc_fps": 62.1,
+    "rs_enc_fps": 318.7,
+    "enc_speedup": 5.132045088566827,
+    "py_dec_fps": 172.4,
+    "rs_dec_fps": 3159.1,
+    "dec_speedup": 18.324245939675173,
+    "avg_mse": 0.6405015552662037,
+    "max_mse": 0.7805891927083334,
+    "psnr": 50.065601722318426,
+    "groups": [
+      {
+        "group": "Frames 00-14",
+        "frames": 15,
+        "avg_mse": 0.6345119357638889,
+        "max_mse": 0.7488053385416666,
+        "roll5_mse": 0.6556243489583333,
+        "psnr": 50.10640564874319,
+        "status": "PASS (Optimal)"
+      },
+      {
+        "group": "Frames 15-29",
+        "frames": 15,
+        "avg_mse": 0.6484077690972222,
+        "max_mse": 0.75083984375,
+        "roll5_mse": 0.6717532552083333,
+        "psnr": 50.01232151027277,
+        "status": "PASS (Optimal)"
+      },
+      {
+        "group": "Frames 30-44",
+        "frames": 15,
+        "avg_mse": 0.6129993489583332,
+        "max_mse": 0.63630859375,
+        "roll5_mse": 0.6301875,
+        "psnr": 50.256203475957484,
+        "status": "PASS (Optimal)"
+      },
+      {
+        "group": "Frames 45-59",
+        "frames": 15,
+        "avg_mse": 0.6405766059027778,
+        "max_mse": 0.7019010416666667,
+        "roll5_mse": 0.6538782552083333,
+        "psnr": 50.06509286847401,
+        "status": "PASS (Optimal)"
+      },
+      {
+        "group": "Frames 60-74",
+        "frames": 15,
+        "avg_mse": 0.6728667534722222,
+        "max_mse": 0.7805891927083334,
+        "roll5_mse": 0.7348216145833334,
+        "psnr": 49.85151290642651,
+        "status": "PASS (Optimal)"
+      },
+      {
+        "group": "Frames 75-89",
+        "frames": 15,
+        "avg_mse": 0.6336469184027779,
+        "max_mse": 0.7354947916666666,
+        "roll5_mse": 0.6592434895833333,
+        "psnr": 50.11233033749507,
+        "status": "PASS (Optimal)"
+      }
+    ]
+  },
+  {
+    "video": "07_break_fade.mp4",
+    "orig_bytes": 75003,
+    "comp_bytes": 6309,
+    "total_frames": 90,
+    "py_enc_fps": 54.5,
+    "rs_enc_fps": 311.6,
+    "enc_speedup": 5.717431192660551,
+    "py_dec_fps": 162.2,
+    "rs_dec_fps": 3119.3,
+    "dec_speedup": 19.23119605425401,
+    "avg_mse": 0.7729212962962962,
+    "max_mse": 1.2135774739583334,
+    "psnr": 49.24945087291637,
+    "groups": [
+      {
+        "group": "Frames 00-14",
+        "frames": 15,
+        "avg_mse": 0.5693628472222223,
+        "max_mse": 0.9097330729166667,
+        "roll5_mse": 0.7632395833333334,
+        "psnr": 50.57691236260001,
+        "status": "PASS (Optimal)"
+      },
+      {
+        "group": "Frames 15-29",
+        "frames": 15,
+        "avg_mse": 0.7310865885416665,
+        "max_mse": 0.9306868489583333,
+        "roll5_mse": 0.7633209635416667,
+        "psnr": 49.49111543829578,
+        "status": "PASS (Optimal)"
+      },
+      {
+        "group": "Frames 30-44",
+        "frames": 15,
+        "avg_mse": 0.8720557725694444,
+        "max_mse": 1.2093326822916666,
+        "roll5_mse": 0.9971393229166667,
+        "psnr": 48.725360996227494,
+        "status": "PASS (Optimal)"
+      },
+      {
+        "group": "Frames 45-59",
+        "frames": 15,
+        "avg_mse": 0.8026870659722222,
+        "max_mse": 0.9822623697916667,
+        "roll5_mse": 0.8989069010416667,
+        "psnr": 49.08534095800878,
+        "status": "PASS (Optimal)"
+      },
+      {
+        "group": "Frames 60-74",
+        "frames": 15,
+        "avg_mse": 0.910660590277778,
+        "max_mse": 1.2135774739583334,
+        "roll5_mse": 0.9461848958333334,
+        "psnr": 48.537238184012494,
+        "status": "PASS (Optimal)"
+      },
+      {
+        "group": "Frames 75-89",
+        "frames": 15,
+        "avg_mse": 0.7516749131944443,
+        "max_mse": 1.0163216145833334,
+        "roll5_mse": 0.834630859375,
+        "psnr": 49.37050304759141,
+        "status": "PASS (Optimal)"
+      }
+    ]
+  },
+  {
+    "video": "08_break_moire.mp4",
+    "orig_bytes": 730432,
+    "comp_bytes": 229,
+    "total_frames": 90,
+    "py_enc_fps": 94.6,
+    "rs_enc_fps": 608.7,
+    "enc_speedup": 6.434460887949261,
+    "py_dec_fps": 167.4,
+    "rs_dec_fps": 3485.3,
+    "dec_speedup": 20.820191158900837,
+    "avg_mse": 1.7223958333333333,
+    "max_mse": 2.5,
+    "psnr": 45.76947394657757,
+    "groups": [
+      {
+        "group": "Frames 00-14",
+        "frames": 15,
+        "avg_mse": 1.475,
+        "max_mse": 2.5,
+        "roll5_mse": 2.0,
+        "psnr": 46.44288340553729,
+        "status": "PASS (Optimal)"
+      },
+      {
+        "group": "Frames 15-29",
+        "frames": 15,
+        "avg_mse": 2.5,
+        "max_mse": 2.5,
+        "roll5_mse": 2.5,
+        "psnr": 44.15140352195873,
+        "status": "PASS (Up to Mark)"
+      },
+      {
+        "group": "Frames 30-44",
+        "frames": 15,
+        "avg_mse": 0.953125,
+        "max_mse": 1.40625,
+        "roll5_mse": 1.40625,
+        "psnr": 48.339304998410306,
+        "status": "PASS (Optimal)"
+      },
+      {
+        "group": "Frames 45-59",
+        "frames": 15,
+        "avg_mse": 1.40625,
+        "max_mse": 1.40625,
+        "roll5_mse": 1.40625,
+        "psnr": 46.650178254124725,
+        "status": "PASS (Optimal)"
+      },
+      {
+        "group": "Frames 60-74",
+        "frames": 15,
+        "avg_mse": 2.0,
+        "max_mse": 2.0,
+        "roll5_mse": 2.0,
+        "psnr": 45.12050365203929,
+        "status": "PASS (Optimal)"
+      },
+      {
+        "group": "Frames 75-89",
+        "frames": 15,
+        "avg_mse": 2.0,
+        "max_mse": 2.0,
+        "roll5_mse": 2.0,
+        "psnr": 45.12050365203929,
+        "status": "PASS (Optimal)"
+      }
+    ]
+  },
+  {
+    "video": "09_scaling_ui.mp4",
+    "orig_bytes": 105331,
+    "comp_bytes": 4572,
+    "total_frames": 90,
+    "py_enc_fps": 55.5,
+    "rs_enc_fps": 353.2,
+    "enc_speedup": 6.363963963963964,
+    "py_dec_fps": 177.9,
+    "rs_dec_fps": 3055.0,
+    "dec_speedup": 17.1725688589095,
+    "avg_mse": 1.8023329354745372,
+    "max_mse": 4.855458984375,
+    "psnr": 45.5724534188095,
+    "groups": [
+      {
+        "group": "Frames 00-14",
+        "frames": 15,
+        "avg_mse": 1.198701171875,
+        "max_mse": 1.3511555989583333,
+        "roll5_mse": 1.3151139322916667,
+        "psnr": 47.3436943096418,
+        "status": "PASS (Optimal)"
+      },
+      {
+        "group": "Frames 15-29",
+        "frames": 15,
+        "avg_mse": 1.5071176215277775,
+        "max_mse": 1.6637272135416667,
+        "roll5_mse": 1.6080572916666669,
+        "psnr": 46.349332131404864,
+        "status": "PASS (Optimal)"
+      },
+      {
+        "group": "Frames 30-44",
+        "frames": 15,
+        "avg_mse": 1.7962630208333332,
+        "max_mse": 1.8722981770833333,
+        "roll5_mse": 1.8691881510416668,
+        "psnr": 45.58710431580565,
+        "status": "PASS (Optimal)"
+      },
+      {
+        "group": "Frames 45-59",
+        "frames": 15,
+        "avg_mse": 1.8797037760416664,
+        "max_mse": 1.9038802083333333,
+        "roll5_mse": 1.889162109375,
+        "psnr": 45.38990947012146,
+        "status": "PASS (Optimal)"
+      },
+      {
+        "group": "Frames 60-74",
+        "frames": 15,
+        "avg_mse": 2.468867838541667,
+        "max_mse": 4.855458984375,
+        "roll5_mse": 3.5922923177083335,
+        "psnr": 44.20582518618567,
+        "status": "PASS (Up to Mark)"
+      },
+      {
+        "group": "Frames 75-89",
+        "frames": 15,
+        "avg_mse": 1.9633441840277779,
+        "max_mse": 3.5952669270833333,
+        "roll5_mse": 2.48936328125,
+        "psnr": 45.20083920605038,
+        "status": "PASS (Optimal)"
+      }
+    ]
+  },
+  {
+    "video": "ball.mp4",
+    "orig_bytes": 104443,
+    "comp_bytes": 78202,
+    "total_frames": 101,
+    "py_enc_fps": 63.6,
+    "rs_enc_fps": 64.5,
+    "enc_speedup": 1.0141509433962264,
+    "py_dec_fps": 59.2,
+    "rs_dec_fps": 515.6,
+    "dec_speedup": 8.70945945945946,
+    "avg_mse": 0.9072919700058241,
+    "max_mse": 1.9737870065789473,
+    "psnr": 48.55333293700091,
+    "groups": [
+      {
+        "group": "Frames 00-20 (Descent & Primary Floor Contact)",
+        "frames": 21,
+        "avg_mse": 0.9971428168306796,
+        "max_mse": 1.3076625386996905,
+        "roll5_mse": 1.2383366389318886,
+        "psnr": 48.143229958165264,
+        "status": "PASS (Optimal)"
+      },
+      {
+        "group": "Frames 21-40 (Rebound & Floor Shadow Separation)",
+        "frames": 20,
+        "avg_mse": 0.7131944478037926,
+        "max_mse": 0.8345733359133127,
+        "roll5_mse": 0.7549483601006192,
+        "psnr": 49.59872407320232,
+        "status": "PASS (Optimal)"
+      },
+      {
+        "group": "Frames 41-60 (Apex Ascent & Free Flight)",
+        "frames": 20,
+        "avg_mse": 0.6882853316079721,
+        "max_mse": 0.7471579914860681,
+        "roll5_mse": 0.6998524574303405,
+        "psnr": 49.753118466818904,
+        "status": "PASS (Optimal)"
+      },
+      {
+        "group": "Frames 61-80 (Secondary Descent & Approach)",
+        "frames": 20,
+        "avg_mse": 0.7050830229295665,
+        "max_mse": 0.8223254885835913,
+        "roll5_mse": 0.7460037732198141,
+        "psnr": 49.64840103057655,
+        "status": "PASS (Optimal)"
+      },
+      {
+        "group": "Frames 81-100 (Secondary Contact & Settle)",
+        "frames": 20,
+        "avg_mse": 1.428261688515867,
+        "max_mse": 1.9737870065789473,
+        "roll5_mse": 1.8659604779411765,
+        "psnr": 46.58272573969617,
+        "status": "PASS (Optimal)"
+      }
+    ]
+  },
+  {
+    "video": "countdown.mp4",
+    "orig_bytes": 1555782,
+    "comp_bytes": 1382932,
+    "total_frames": 755,
+    "py_enc_fps": 3.7,
+    "rs_enc_fps": 23.6,
+    "enc_speedup": 6.378378378378378,
+    "py_dec_fps": 14.3,
+    "rs_dec_fps": 386.1,
+    "dec_speedup": 27.0,
+    "avg_mse": 7.320218968665571,
+    "max_mse": 15.301638292910448,
+    "psnr": 39.48556288626343,
+    "groups": [
+      {
+        "group": "Frames 000-125 (Initial Static & Countdown '3')",
+        "frames": 126,
+        "avg_mse": 5.583449710308822,
+        "max_mse": 10.262677335976369,
+        "roll5_mse": 8.822927646921642,
+        "psnr": 40.661777520323426,
+        "status": "PASS (Up to Mark)"
+      },
+      {
+        "group": "Frames 126-250 (Digit Transition & Digit '2')",
+        "frames": 125,
+        "avg_mse": 6.318044053171642,
+        "max_mse": 10.89266655006219,
+        "roll5_mse": 9.15409135960821,
+        "psnr": 40.12497711128053,
+        "status": "PASS (Up to Mark)"
+      },
+      {
+        "group": "Frames 251-375 (Digit Transition & Digit '1')",
+        "frames": 125,
+        "avg_mse": 6.521526624689055,
+        "max_mse": 9.262359102922886,
+        "roll5_mse": 8.485280045087064,
+        "psnr": 39.98731089204866,
+        "status": "SUB-OPTIMAL"
+      },
+      {
+        "group": "Frames 376-500 (Digit Transition '0' & Initial Spark Burst)",
+        "frames": 125,
+        "avg_mse": 7.488720226990051,
+        "max_mse": 15.301638292910448,
+        "roll5_mse": 13.355925159359453,
+        "psnr": 39.386727548967144,
+        "status": "SUB-OPTIMAL"
+      },
+      {
+        "group": "Frames 501-625 (High-Entropy Fireworks Cascade 1)",
+        "frames": 125,
+        "avg_mse": 9.033710350590795,
+        "max_mse": 9.472877798507463,
+        "roll5_mse": 9.273165617226368,
+        "psnr": 38.57214199277995,
+        "status": "SUB-OPTIMAL"
+      },
+      {
+        "group": "Frames 626-754 (High-Entropy Fireworks Cascade 2 & Settle)",
+        "frames": 129,
+        "avg_mse": 8.937988379173659,
+        "max_mse": 9.40117770522388,
+        "roll5_mse": 9.13132909670398,
+        "psnr": 38.61840575196069,
+        "status": "SUB-OPTIMAL"
+      }
+    ]
+  }
+]
