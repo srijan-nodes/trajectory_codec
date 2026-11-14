@@ -2,6 +2,7 @@ use std::io::{Read, Write};
 use anyhow::{bail, Context, Result};
 use byteorder::{LittleEndian, ReadBytesExt, WriteBytesExt};
 
+pub const MAGIC_V7: &[u8; 6] = b"NAM_V7";
 pub const MAGIC_V6: &[u8; 6] = b"NAM_V6";
 pub const MAGIC_V5: &[u8; 6] = b"NAM_V5";
 pub const HEADER_SIZE: usize = 21;
@@ -10,12 +11,14 @@ pub const HEADER_SIZE: usize = 21;
 pub enum BitstreamVersion {
     V5,
     V6,
+    V7,
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum StreamMode {
     Macroblock = 0,
     LayeredTrajectory = 1,
+    BoundaryObject = 2,
 }
 
 #[derive(Debug, Clone)]
@@ -35,6 +38,7 @@ impl NamHeader {
         reader.read_exact(&mut magic).context("Failed to read magic bytes")?;
 
         let version = match &magic {
+            MAGIC_V7 => BitstreamVersion::V7,
             MAGIC_V6 => BitstreamVersion::V6,
             MAGIC_V5 => BitstreamVersion::V5,
             other => bail!("Invalid bitstream magic: {:?}", String::from_utf8_lossy(other)),
@@ -46,13 +50,14 @@ impl NamHeader {
         let qp = reader.read_u16::<LittleEndian>()?;
 
         let (stream_mode, has_bg) = match version {
-            BitstreamVersion::V6 => {
+            BitstreamVersion::V7 | BitstreamVersion::V6 => {
                 let mode_byte = reader.read_u8()?;
                 let mut reserved = [0u8; 3];
                 reader.read_exact(&mut reserved)?;
                 let mode = match mode_byte {
                     0 => StreamMode::Macroblock,
                     1 => StreamMode::LayeredTrajectory,
+                    2 => StreamMode::BoundaryObject,
                     other => bail!("Unknown stream mode byte: {}", other),
                 };
                 (mode, true)
@@ -76,6 +81,15 @@ impl NamHeader {
 
     pub fn write<W: Write>(&self, mut writer: W) -> Result<()> {
         match self.version {
+            BitstreamVersion::V7 => {
+                writer.write_all(MAGIC_V7)?;
+                writer.write_u32::<LittleEndian>(self.height)?;
+                writer.write_u32::<LittleEndian>(self.width)?;
+                writer.write_u32::<LittleEndian>(self.total_frames)?;
+                writer.write_u16::<LittleEndian>(self.qp)?;
+                writer.write_u8(self.stream_mode as u8)?;
+                writer.write_all(&[0, 0, 0])?;
+            }
             BitstreamVersion::V6 => {
                 writer.write_all(MAGIC_V6)?;
                 writer.write_u32::<LittleEndian>(self.height)?;

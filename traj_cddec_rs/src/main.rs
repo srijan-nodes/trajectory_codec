@@ -42,6 +42,9 @@ enum Commands {
 
         #[arg(long, help = "Force layered trajectory mode (Stream Type 1)")]
         layered: bool,
+
+        #[arg(long, help = "Use V7 Boundary Understanding & Constant Effects Engine")]
+        boundary: bool,
     },
 
     /// Decode a .nam bitstream to an MP4 video or verify reconstruction
@@ -203,7 +206,7 @@ fn run_batch_benchmark(folder: &Path, save_videos: bool) -> Result<()> {
 
             let config = EncoderConfig::default();
             println!("\n>> [Rust Workflow] Encoding {:?} -> {:?}", video, enc_out);
-            let enc_stats = encode_file(video, &enc_out, &config)?;
+            let _enc_stats = encode_file(video, &enc_out, &config)?;
             println!(">> [Rust Workflow] Decoding & Rendering {:?} -> {:?}", enc_out, dec_out);
             let dec_res = decode_file(&enc_out)?;
 
@@ -294,6 +297,7 @@ fn main() -> Result<()> {
             lambda,
             no_boxing,
             layered,
+            boundary,
         } => {
             println!("Encoding {:?} -> {:?}", input, output);
             let config = EncoderConfig {
@@ -301,6 +305,7 @@ fn main() -> Result<()> {
                 lambda,
                 dynamic_boxing: !no_boxing,
                 use_layered: if layered { Some(true) } else { None },
+                use_boundary: boundary,
             };
             let stats = encode_file(&input, &output, &config)?;
             println!("Successfully encoded {} frames in {:.2}s ({:.1} FPS)", stats.total_frames, stats.encode_time_s, stats.total_frames as f64 / stats.encode_time_s);

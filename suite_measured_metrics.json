@@ -1,0 +1,123 @@
+[
+  {
+    "video": "01_ideal_motion.mp4",
+    "stem": "01_ideal_motion",
+    "orig_bytes": 83222,
+    "comp_bytes": 2240,
+    "reduction_pct": 97.30840402778111,
+    "enc_fps": 95.2,
+    "dec_fps": 2655.3333333333335,
+    "avg_mse": 0.0377,
+    "psnr": 62.37
+  },
+  {
+    "video": "02_ideal_cache.mp4",
+    "stem": "02_ideal_cache",
+    "orig_bytes": 75424,
+    "comp_bytes": 2554,
+    "reduction_pct": 96.61380992787441,
+    "enc_fps": 478.8,
+    "dec_fps": 3291.0333333333333,
+    "avg_mse": 0.0583,
+    "psnr": 60.48
+  },
+  {
+    "video": "03_ideal_palette.mp4",
+    "stem": "03_ideal_palette",
+    "orig_bytes": 74288,
+    "comp_bytes": 603,
+    "reduction_pct": 99.18829420633212,
+    "enc_fps": 349.2,
+    "dec_fps": 2960.8333333333335,
+    "avg_mse": 0.0392,
+    "psnr": 62.2
+  },
+  {
+    "video": "04_ideal_baseline.mp4",
+    "stem": "04_ideal_baseline",
+    "orig_bytes": 274445,
+    "comp_bytes": 440,
+    "reduction_pct": 99.83967643790194,
+    "enc_fps": 327.1,
+    "dec_fps": 2370.9333333333334,
+    "avg_mse": 0.0556,
+    "psnr": 60.68
+  },
+  {
+    "video": "05_break_entropy.mp4",
+    "stem": "05_break_entropy",
+    "orig_bytes": 7608606,
+    "comp_bytes": 25435220,
+    "reduction_pct": -234.29540181210592,
+    "enc_fps": 15.2,
+    "dec_fps": 2629.6666666666665,
+    "avg_mse": 0.0,
+    "psnr": 0.0
+  },
+  {
+    "video": "06_break_jitter.mp4",
+    "stem": "06_break_jitter",
+    "orig_bytes": 99745,
+    "comp_bytes": 3547,
+    "reduction_pct": 96.443932026668,
+    "enc_fps": 288.1,
+    "dec_fps": 3129.6333333333337,
+    "avg_mse": 0.0511,
+    "psnr": 61.05
+  },
+  {
+    "video": "07_break_fade.mp4",
+    "stem": "07_break_fade",
+    "orig_bytes": 75003,
+    "comp_bytes": 6194,
+    "reduction_pct": 91.74166366678666,
+    "enc_fps": 267.9,
+    "dec_fps": 3101.8333333333335,
+    "avg_mse": 0.5523,
+    "psnr": 50.71
+  },
+  {
+    "video": "08_break_moire.mp4",
+    "stem": "08_break_moire",
+    "orig_bytes": 730432,
+    "comp_bytes": 308,
+    "reduction_pct": 99.9578331726978,
+    "enc_fps": 338.5,
+    "dec_fps": 2836.566666666667,
+    "avg_mse": 0.9174,
+    "psnr": 48.51
+  },
+  {
+    "video": "09_scaling_ui.mp4",
+    "stem": "09_scaling_ui",
+    "orig_bytes": 105331,
+    "comp_bytes": 4720,
+    "reduction_pct": 95.51888807663461,
+    "enc_fps": 337.7,
+    "dec_fps": 3168.633333333333,
+    "avg_mse": 0.7238,
+    "psnr": 49.53
+  },
+  {
+    "video": "ball.mp4",
+    "stem": "ball",
+    "orig_bytes": 104443,
+    "comp_bytes": 78601,
+    "reduction_pct": 24.742682611568036,
+    "enc_fps": 57.8,
+    "dec_fps": 515.0333333333333,
+    "avg_mse": 0.8971,
+    "psnr": 48.6
+  },
+  {
+    "video": "countdown.mp4",
+    "stem": "countdown",
+    "orig_bytes": 1555782,
+    "comp_bytes": 1433524,
+    "reduction_pct": 7.858298913343898,
+    "enc_fps": 21.2,
+    "dec_fps": 361.73333333333335,
+    "avg_mse": 3.5813,
+    "psnr": 42.59
+  }
+]

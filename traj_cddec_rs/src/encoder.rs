@@ -8,6 +8,7 @@ use image::{imageops, ExtendedColorType, ImageEncoder};
 use image::codecs::webp::WebPEncoder;
 
 use crate::bitstream::{NamHeader, BitstreamVersion, StreamMode};
+use crate::boundary::encode_boundary_stream;
 use crate::modes::*;
 use crate::video_io::read_video_frames_grayscale;
 
@@ -17,6 +18,7 @@ pub struct EncoderConfig {
     pub lambda: f64,
     pub dynamic_boxing: bool,
     pub use_layered: Option<bool>,
+    pub use_boundary: bool,
 }
 
 impl Default for EncoderConfig {
@@ -26,6 +28,7 @@ impl Default for EncoderConfig {
             lambda: 0.012,
             dynamic_boxing: true,
             use_layered: None,
+            use_boundary: false,
         }
     }
 }
@@ -57,6 +60,40 @@ pub fn encode_file<P: AsRef<Path>, Q: AsRef<Path>>(
     let total_frames = frames.len();
     if total_frames == 0 {
         anyhow::bail!("No frames found in video");
+    }
+
+    if config.use_boundary {
+        let header = NamHeader {
+            version: BitstreamVersion::V7,
+            height: h as u32,
+            width: w as u32,
+            total_frames: total_frames as u32,
+            qp: config.qp,
+            stream_mode: StreamMode::BoundaryObject,
+            has_bg: true,
+        };
+
+        let file = File::create(o_path)
+            .with_context(|| format!("Failed to create output file: {:?}", o_path))?;
+        let mut writer = BufWriter::new(file);
+        header.write(&mut writer)?;
+
+        let mut zstd_writer = zstd::stream::write::Encoder::new(writer, 19)
+            .context("Failed to initialize Zstandard compression stream")?;
+
+        encode_boundary_stream(&frames, w, h, &mut zstd_writer)?;
+        zstd_writer.finish()?;
+
+        let encode_time_s = start_time.elapsed().as_secs_f64();
+        let compressed_bytes = std::fs::metadata(o_path).map(|m| m.len() as usize).unwrap_or(0);
+
+        return Ok(EncodeStats {
+            encode_time_s,
+            total_frames,
+            orig_bytes,
+            compressed_bytes,
+            stream_mode: StreamMode::BoundaryObject,
+        });
     }
 
     let fname = v_path.file_name().unwrap_or_default().to_string_lossy().to_lowercase();
@@ -301,9 +338,9 @@ pub fn encode_file<P: AsRef<Path>, Q: AsRef<Path>>(
 
                     let b_range = b_max - b_min;
 
-                    // 1. SKIP LANE: Gated source-skip
-                    let is_recon_static = max_diff < 4;
-                    let is_source_static = orig_max_diff < 3 && orig_sad < 128 && max_diff < 8;
+                    // 1. SKIP LANE: Gated source-skip (strict threshold to prevent faint ghost trails in flat background)
+                    let is_recon_static = max_diff < 2;
+                    let is_source_static = orig_max_diff < 2 && orig_sad < 64 && max_diff < 3;
 
                     if is_recon_static || is_source_static {
                         skip_run += 1;

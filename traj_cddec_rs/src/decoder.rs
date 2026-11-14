@@ -7,6 +7,7 @@ use byteorder::{LittleEndian, ReadBytesExt};
 use image::{imageops, ImageFormat};
 
 use crate::bitstream::{NamHeader, StreamMode};
+use crate::boundary::decode_boundary_stream;
 use crate::modes::*;
 
 #[derive(Debug, Clone)]
@@ -239,6 +240,12 @@ pub fn decode_file<P: AsRef<Path>>(encoded_path: P) -> Result<DecodedVideo> {
                     reconstructed_frames.push(frame_rgb);
                 }
             }
+        }
+
+        StreamMode::BoundaryObject => {
+            is_rgb = false;
+            let boundary_frames = decode_boundary_stream(&mut stream, w, h, total_frames)?;
+            reconstructed_frames.extend(boundary_frames);
         }
 
         StreamMode::Macroblock => {

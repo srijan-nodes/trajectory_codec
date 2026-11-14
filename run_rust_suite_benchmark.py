@@ -3,6 +3,7 @@ import sys
 import time
 import subprocess
 import json
+import argparse
 from pathlib import Path
 import cv2
 import numpy as np
@@ -82,11 +83,12 @@ def get_frame_groups(total_frames, video_name):
             })
     return groups
 
-def run_suite_video(video_path):
+def run_suite_video(video_path, boundary=False):
     vname = video_path.name
-    stem = video_path.stem
+    stem = video_path.stem + ("_boundary" if boundary else "")
+    tag = "V7 Boundary Engine" if boundary else "V6 Macroblock Engine"
     print(f"\n{'='*80}")
-    print(f"RUNNING RUST ALGORITHM ON: {vname}")
+    print(f"RUNNING RUST ({tag}) ON: {vname}")
     print(f"{'='*80}")
 
     orig_frames = get_original_frames(video_path)
@@ -101,6 +103,8 @@ def run_suite_video(video_path):
     print(f">> [Rust] Encoding {vname} -> {nam_path.name}...")
     t0 = time.time()
     cmd_enc = [RUST_EXE, "encode", "--input", str(video_path), "--output", str(nam_path)]
+    if boundary:
+        cmd_enc.append("--boundary")
     res_enc = subprocess.run(cmd_enc, capture_output=True, text=True)
     enc_wall_time = time.time() - t0
     
@@ -223,26 +227,37 @@ def run_suite_video(video_path):
     }
 
 def main():
+    parser = argparse.ArgumentParser(description="Rust Trajectory Codec Benchmark Suite")
+    parser.add_argument("--boundary", action="store_true", help="Run V7 Boundary Object Understanding Engine")
+    parser.add_argument("--video", type=str, default=None, help="Run on a specific video (e.g. ball.mp4)")
+    args = parser.parse_args()
+
     test_dir = Path("test_vid")
-    videos = sorted([
-        f for f in test_dir.glob("*.mp4")
-        if not any(sub in f.name for sub in ["_2f", "_5f", "_10f"])
-    ])
+    if args.video:
+        target_video = test_dir / args.video if not Path(args.video).exists() else Path(args.video)
+        videos = [target_video]
+    else:
+        videos = sorted([
+            f for f in test_dir.glob("*.mp4")
+            if not any(sub in f.name for sub in ["_2f", "_5f", "_10f", "_sbs", "_decoded", "_zoom"])
+        ])
 
     print(f"Found {len(videos)} videos in corpus: {[v.name for v in videos]}")
     all_results = []
 
     for v in videos:
-        res = run_suite_video(v)
+        res = run_suite_video(v, boundary=args.boundary)
         if res:
             all_results.append(res)
 
-    out_json = Path("suite_benchmark_rust_latest.json")
+    suffix = "_boundary" if args.boundary else ""
+    out_json = Path(f"suite_benchmark_rust{suffix}_latest.json")
     with open(out_json, "w") as f:
         json.dump(all_results, f, indent=2)
 
+    tag = "V7 BOUNDARY ENGINE" if args.boundary else "V6 MACROBLOCK ENGINE"
     print(f"\n{'='*100}")
-    print(f"{'SUITE BENCHMARK COMPLETED SUCCESSFULLY':^100}")
+    print(f"{f'SUITE BENCHMARK ({tag}) COMPLETED SUCCESSFULLY':^100}")
     print(f"{'='*100}")
     print(f"{'Video':<24} | {'Orig Size':>10} | {'Rust Size':>10} | {'Reduction':>10} | {'Enc FPS':>8} | {'Dec FPS':>9} | {'MSE':>7} | {'PSNR':>8}")
     print(f"{'-'*100}")
